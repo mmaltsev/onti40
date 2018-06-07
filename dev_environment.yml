@@ -1,0 +1,12 @@
+name: onti40
+dependencies:
+- python=3.6
+- pip:
+    - Flask
+    - gevent
+    - rdflib
+    - SPARQLWrapper
+    - requests
+    - numpy
+    - termcolor
+    - colorama

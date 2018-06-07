@@ -1,0 +1,38 @@
+{% extends "app.html" %}
+{% block content %}
+<hr class="overview-hr"/>
+<div class="block">
+  <span class="block-title">Standards</span>
+  <hr>
+  <div class="block-content index-content">
+    <input type="text" placeholder="search" class="search" oninput="standardSearch(this.value)" />
+    <div id="standardsList"></div>
+  </div>
+</div>
+<div class="block">
+  <span class="block-title">Standard Organizations</span>
+  <hr>
+  <div class="block-content index-content">
+    <input type="text" placeholder="search" class="search" oninput="organizationSearch(this.value)" />
+    <div id="standardOrganizationsList"></div>
+  </div>
+</div>
+<div class="block">
+  <span class="block-title">Standard Predicates</span>
+  <hr>
+  <div class="block-content index-content">
+    <input type="text" placeholder="search" class="search" oninput="predicateSearch(this.value)" />
+    <div id="predicatesList"></div>
+  </div>
+</div>
+<div class="block">
+  <span class="block-title">Key Statistics</span>
+  <hr>
+  <div class="block-content index-content">
+    123
+  </div>
+</div>
+
+<script src="overview.js"></script>
+
+{% endblock %}
