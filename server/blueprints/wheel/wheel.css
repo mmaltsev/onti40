@@ -11,7 +11,8 @@
 #chart { text-align: center; }
   
 .dependencyWheel { font: 16px sans-serif; }
-  
+.dependencyWheel > g > g:first-child { font-weight: bold; }
+
 .container {
   margin: 0;
   padding: 0;
