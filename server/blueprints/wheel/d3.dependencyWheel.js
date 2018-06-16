@@ -81,7 +81,6 @@ d3.chart.dependencyWheel = function(options) {
         .outerRadius(radius + 20);
 
       var fill = function(d) {
-        console.log(d)
         return colors[d.index]
       };
 
