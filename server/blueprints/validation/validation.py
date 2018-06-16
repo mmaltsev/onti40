@@ -23,7 +23,7 @@ def index():
 
 
 @validation_handler.route('/template', methods=['GET'])
-def get_standards():
+def template():
     """ """
     log_cmd('Requested SHACL template', 'green')
     with open(os.path.join(STATIC_DIR, 'template.ttl'), 'r') as f:

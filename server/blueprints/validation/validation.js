@@ -106,10 +106,11 @@ function getRowColor(constraint) {
 
 function mapError(error) {
   let errorMapping = {
-    'Less than 1 values': 'Value is not specified',
-    'Value does not have node kind <i>shcl:IRI</i>': 'Value supposed to be <i>URI</i>',
-    'Value does not have datatype': 'Value supposed to have datatype',
-    'Value does not match pattern "^': 'Value should start with "',
+    'Less than 1 values': 'Not specified',
+    'More than 1 values': 'More than one value',
+    'Value does not have node kind <i>shcl:IRI</i>': 'Supposed to be <i>URI</i>',
+    'Value does not have datatype': 'Supposed to have datatype',
+    'Value does not match pattern "^': 'Should start with "',
   }
   for (let errorPattern in errorMapping) {
     if (errorMapping.hasOwnProperty(errorPattern)) {
@@ -118,7 +119,7 @@ function mapError(error) {
       }
     }
   }
-  return str
+  return error
 }
 
 function addPrefix(uri) {
