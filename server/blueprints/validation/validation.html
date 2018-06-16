@@ -1,0 +1,26 @@
+{% extends "app.html" %}
+{% block content %}
+<div class="column">
+  <div class="column">
+    <button onclick="onValidate()" id="validateButton">Validate STO against the template</button>
+    <div class="row links">
+      <a href="https://github.com/i40-Tools/StandardOntology" target="_blank" class="link">Standard Ontology</a>
+      <a href="https://github.com/i40-Tools/STO_SHACL/blob/master/src/template.ttl" target="_blank" class="link">Standard Template</a>
+      <a href="https://www.w3.org/TR/shacl/" target="_blank" class="link">Shapes Constraint Language</a>
+    </div>
+  </div>
+  <div id="table-content">
+    <input type="text" id="filter" placeholder="Specify the subject" oninput="onFilter()" />
+    <div id="search-img-wrap"  onclick="onFilter()">
+      <img src="assets/search.png" class="search-img" />
+    </div>
+    <table id="resultTable"></table>
+  </div>
+</div>
+<img src="assets/spinner.gif" id="spinner" />
+
+<script src="shacl.js"></script>
+<script src="helpers.js"></script>
+<script src="validation.js"></script>
+
+{% endblock %}

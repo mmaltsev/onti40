@@ -1,0 +1,117 @@
+.me-validation {
+  background-color: #0e7c7c;
+}
+
+.links {
+  font-size: 12px;
+  margin: 0 0 10px calc(50% - 200px);
+  width: 400px;
+}
+
+.link {
+  color: black;
+}
+
+#filter {
+  display: none;
+  width: calc(100% - 24px);
+  font-size: 15px;
+  height: 40px;
+  padding: 0 10px;
+  outline: none;
+  position: sticky;
+  top: 0;
+}
+
+#search-img-wrap {
+  background: lightgray;
+  width: 40px;
+  height: 42px;
+  margin-top: -43px;
+  right: 0;
+  text-align: center;
+  display: none;
+  cursor: pointer;
+  position: sticky;
+  top: 1px;
+  float: right;
+}
+
+.search-img {
+  position: relative;
+  width: 30px;
+  margin-top: 5px;
+}
+
+#resultTable {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+
+#resultTable th, #resultTable td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  height: 30px;
+}
+
+#resultTable th {
+  background-color: cadetblue;
+  color: white;
+  font-size: 20px;
+  position: sticky;
+  top: 40px;
+}
+
+.subject {
+  vertical-align: middle;
+}
+
+.endline {
+  border-bottom: 1px solid black !important;
+}
+
+#dataTextarea, #shapesTextarea {
+  max-width: 630px;
+  max-height: 330px;
+  min-width: 630px;
+  min-height: 330px;
+  margin-bottom: 20px;
+}
+
+.textarea-headline {
+  margin: 5px 0;
+  font-weight: 700;
+  font-size: 20px;
+  color: darkslategray;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.column {
+  display:flex; 
+  flex-direction: column;
+}
+
+#validateButton {
+  background: goldenrod;
+  width: 400px;
+  height: 50px;
+  margin-left: calc(50% - 200px);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  outline: none;
+}
+
+#spinner {
+  position: absolute;
+  display: none;
+  left: calc(50% - 100px);
+  top: 300px;
+}
