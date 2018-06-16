@@ -1,0 +1,29 @@
+.me-statistics {
+  background-color: #0e7c7c;
+}
+
+#statsTable {
+  border-collapse: collapse;
+  width: 80%;
+  table-layout: fixed;
+}
+
+#statsTable th, #statsTable td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  height: 30px;
+}
+
+#statsTable th {
+  background-color: cadetblue;
+  color: white;
+  font-size: 20px;
+  position: sticky;
+  top: 40px;
+}
+
+.source-img {
+  width: 20px;
+  height: 20px;
+}
