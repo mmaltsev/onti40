@@ -1,5 +1,5 @@
-# Server
-Web application for working with STO.
+# onti40
+Web application for working with the [Standard Otology](https://github.com/i40-Tools/StandardOntology).
 
 ## Setup
 Make sure to have [Anaconda 3](https://www.continuum.io/downloads) for Python 3.6.
