@@ -1,9 +1,12 @@
-.overview-hr {
-  position: absolute;
-  color: white;
-  width: 100px;
-  top: 70px;
-  left: 160px;
+.me-overview {
+  background-color: #0e7c7c;
+}
+
+.search-wrap {
+  position: sticky;
+  width: 100%;
+  background: white;
+  top: 0;
 }
 
 .search {
@@ -11,6 +14,7 @@
   outline: none;
   margin-bottom: 5px;
   border-bottom: 1px solid gray;
+  width: 100%;
 }
 
 .list-element {
@@ -24,5 +28,16 @@
 #standardsList, #standardOrganizationsList, #predicatesList, #info {
   display: flex;
   flex-direction: column;
-  height: 320px;
+  height: 440px;
+}
+
+.stat-name {
+  color: gray;
+}
+
+.spinner {
+  width: 100px;
+  position: absolute;
+  margin-left: 75px;
+  margin-top: 185px;
 }

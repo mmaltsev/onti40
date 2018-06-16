@@ -1,35 +1,44 @@
 {% extends "app.html" %}
 {% block content %}
-<hr class="overview-hr"/>
 <div class="block">
   <span class="block-title">Standards</span>
   <hr>
   <div class="block-content index-content">
-    <input type="text" placeholder="search" class="search" oninput="standardSearch(this.value)" />
+    <div class="search-wrap">
+      <input type="text" placeholder="search" class="search" oninput="standardSearch(this.value)" />
+    </div>
     <div id="standardsList"></div>
+    <img src="assets/spinner.gif" class="spinner" id="standard-spinner" />
   </div>
 </div>
 <div class="block">
   <span class="block-title">Standard Organizations</span>
   <hr>
   <div class="block-content index-content">
-    <input type="text" placeholder="search" class="search" oninput="organizationSearch(this.value)" />
+    <div class="search-wrap">
+      <input type="text" placeholder="search" class="search" oninput="organizationSearch(this.value)" />
+    </div>
     <div id="standardOrganizationsList"></div>
+    <img src="assets/spinner.gif" class="spinner" id="standardOrganization-spinner" />
   </div>
 </div>
 <div class="block">
-  <span class="block-title">Standard Predicates</span>
+  <span class="block-title">Standard Properties</span>
   <hr>
   <div class="block-content index-content">
-    <input type="text" placeholder="search" class="search" oninput="predicateSearch(this.value)" />
+    <div class="search-wrap">
+      <input type="text" placeholder="search" class="search" oninput="propertySearch(this.value)" />
+    </div>
     <div id="predicatesList"></div>
+    <img src="assets/spinner.gif" class="spinner" id="predicate-spinner" />
   </div>
 </div>
 <div class="block">
   <span class="block-title">Key Statistics</span>
   <hr>
   <div class="block-content index-content">
-    123
+    <div id="statistics"></div>
+    <img src="assets/spinner.gif" class="spinner" id="statistics-spinner" />
   </div>
 </div>
 
