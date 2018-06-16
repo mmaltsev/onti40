@@ -1,19 +1,11 @@
-function getRequest(url) {
-  axios.get(url)
-    .then(function(response) {
-      console.log('Requested data: ', response.data)
-    })
-    .catch(function(error) {
-      console.log('Error: ', error);
-    });
+function getRequest(url, fun) {
+  return axios.get(url)
+    .then( (response) => fun(response.data) )
+    .catch( (error) => console.error('Failed to request `' + url + '`. ' + error) )
 }
   
-function postRequest(url, params) {
-  axios.post(url, params)
-    .then(function(response) {
-      console.log('Requested data: ', response.data)
-    })
-    .catch(function(error) {
-      console.log('Error: ', error);
-    });
+function postRequest(url, params, fun) {
+  return axios.post(url, params)
+    .then( (response) => fun(response.data) )
+    .catch( (error) => console.error('Failed to request `' + url + '`. ' + error) )
 }

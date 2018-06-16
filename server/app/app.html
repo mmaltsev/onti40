@@ -6,22 +6,22 @@
       <link rel="stylesheet" href="{{ local_css }}">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>Enriching Standard Ontology - {{ page_title }}</title>
+      <script src="{{ url_for('static', filename='libs/axios.min.js')}}"></script>
+      <script src="{{ url_for('static', filename='app.js')}}"></script>
     {% endblock %}
   </head>
   <body>
     <div class="head">
       <span>STO</span>
       <div class="menu">
-        <a href="/overview" class="menu-link"><div class="menu-block">overview</div></a>
-        <a href="/statistics" class="menu-link"><div class="menu-block">statistics</div></a>
-        <a href="/enrichment" class="menu-link"><div class="menu-block">enrichment</div></a>
-        <a href="/validation" class="menu-link"><div class="menu-block">validation</div></a>
+        <a href="/overview" class="menu-link me-overview"><div class="menu-block">overview</div></a>
+        <a href="/statistics" class="menu-link me-statistics"><div class="menu-block">statistics</div></a>
+        <a href="/enrichment" class="menu-link me-enrichment"><div class="menu-block">enrichment</div></a>
+        <a href="/validation" class="menu-link me-validation"><div class="menu-block">validation</div></a>
       </div>
     </div>
     <div class="content">
       {% block content %}{% endblock %}
     </div>
-
-    <script src="{{ url_for('static', filename='app.js')}}"></script>
   </body>
 </html>
