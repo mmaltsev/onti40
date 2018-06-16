@@ -1,61 +1,44 @@
 from server.landscape import Ontology
+from server.datafetch import fetch_sto_data
 
 def standards():
-    """ """
+    ''' '''
 
-    ont_query = """
+    ont_query = '''
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX sto: <https://w3id.org/i40/sto#>
-        SELECT ?standard WHERE {
-            ?standard rdf:type sto:Standard .
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        SELECT ?standard ?label WHERE {
+            ?standard rdf:type sto:Standard ;
+                      rdfs:label ?label .
+            FILTER (langMatches(lang(?label), 'en'))
         }
-    """
-    return fetch_sto_data(ont_query)
-
+    '''
+    return fetch_sto_data(ont_query, ['standards', 'standard_labels'])
 
 def standard_organizations():
-    """ """
+    ''' '''
 
-    ont_query = """
+    ont_query = '''
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX sto: <https://w3id.org/i40/sto#>
-        SELECT ?standard WHERE {
-            ?standard rdf:type sto:StandardOrganization .
+        SELECT ?org ?name WHERE {
+            ?org rdf:type sto:StandardOrganization ;
+                 sto:orgName ?name .
+            FILTER (langMatches(lang(?name), 'en'))
         }
-    """
-    return fetch_sto_data(ont_query)
+    '''
+    return fetch_sto_data(ont_query, ['standard_organizations', 'standard_organization_names'])
 
-    
-def standard_properties():
-    """ """
+def sto_properties():
+    ''' '''
 
-    ont_query = """
+    ont_query = '''
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX sto: <https://w3id.org/i40/sto#>
-        SELECT ?standard WHERE {
-            ?standard rdf:type sto:Standard .
+        SELECT ?property WHERE {
+            ?property rdf:type owl:ObjectProperty .
         }
-    """
-    return fetch_sto_data(ont_query)
-
-    
-def standards():
-    """ """
-
-    ont_query = """
-        PREFIX sto: <https://w3id.org/i40/sto#>
-        SELECT ?standard WHERE {
-            ?standard rdf:type sto:Standard .
-        }
-    """
-    standard_list = fetch_sto_data(ont_query)
-    return standard_list
-
-
-
-def fetch_sto_data(ont_query):
-    ont = Ontology('https://rawgit.com/i40-Tools/StandardOntology/master/sto.ttl')
-    data = []
-    for row in ont.query(ont_query):
-        standard_full = str(row[0])
-        standard_split_list = standard_full.split('/')
-        standard = '/'.join(standard_split_list[4:])
-        data.append(standard)
-    return data
+    '''
+    return fetch_sto_data(ont_query, ['sto_properties'])
