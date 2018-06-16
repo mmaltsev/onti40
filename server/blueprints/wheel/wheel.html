@@ -1,0 +1,17 @@
+{% extends "app.html" %}
+{% block content %}
+
+<div id="container" class="container">
+  <img src="assets/spinner.gif" id="spinner" class="spinner" />
+  <div id="chart"></div>
+  <div class="wheel-menu">
+    <div class="save-btn" onclick="saveAsPng()">Save as PNG</div>
+  </div>
+</div>
+
+<script src="d3.v4.min.js"></script>
+<script src="d3.dependencyWheel.js"></script>
+<script src="saveSvgAsPng.js"></script>
+<script src="wheel.js"></script>
+
+{% endblock %}
