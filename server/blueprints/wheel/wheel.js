@@ -43,3 +43,7 @@ function saveAsPng() {
   let wheelElement = document.getElementById('wheel')
   saveSvgAsPng(wheelElement, 'wheel.png') // from saveSvgAsPng.js library
 }
+
+function optionChange() {
+  console.log('option change')
+}

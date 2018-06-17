@@ -5,7 +5,12 @@
   <img src="assets/spinner.gif" id="spinner" class="spinner" />
   <div id="chart"></div>
   <div class="wheel-menu">
-    <div class="save-btn" onclick="saveAsPng()">Save as PNG</div>
+    <div class="menu-element" onclick="saveAsPng()">Save as PNG</div>
+    <select class="menu-element" onchange="optionChange()">
+      {% for option in options %}
+        <option>{{ option }}</option>
+      {% endfor %}
+    </select>
   </div>
 </div>
 

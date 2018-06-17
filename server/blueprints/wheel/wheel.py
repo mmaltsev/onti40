@@ -10,13 +10,26 @@ wheel_handler = Blueprint(name='wheel',
                             template_folder='',
                             static_folder='')
 
+def get_sto_subs():
+    query = '''
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX sto: <https://w3id.org/i40/sto#>
+        SELECT ?sub WHERE {
+            ?sub rdf:type ?stand .
+            FILTER (?stand IN (sto:Standard, sto:StandardOrganization))
+        }
+    '''
+    return fetch_sto_data(query, ['sub'])['sub']
+
 @wheel_handler.route('/', methods=['GET'])
 def index():
     """Render wheel page."""
     log_cmd('Requested wheel.index', 'green')
+    options = get_sto_subs()
     return render_template('wheel.html',
                            page_title='Wheel',
                            local_css='wheel.css',
+                           options = options,
                            )
 
 @wheel_handler.route('/data', methods=['GET'])
