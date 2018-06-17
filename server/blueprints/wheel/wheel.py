@@ -25,11 +25,11 @@ def get_sto_subs():
 def index():
     """Render wheel page."""
     log_cmd('Requested wheel.index', 'green')
-    options = get_sto_subs()
+    #options = get_sto_subs()
     return render_template('wheel.html',
                            page_title='Wheel',
                            local_css='wheel.css',
-                           options = options,
+                           #options = options,
                            )
 
 @wheel_handler.route('/data', methods=['GET'])
