@@ -9,6 +9,7 @@ IF "%1"=="setup" (
 set /p texte=< dev_environment.yml
 set env_name=%texte:~6,6%
 
+:: running the server ::
 CALL activate %env_name%
 CALL python -c "from server import server; server.main()"
 
