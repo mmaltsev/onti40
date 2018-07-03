@@ -1,4 +1,4 @@
-if [ $1 -eq "setup" ]
+if [ $1 = "setup" ]
 then
   # installing conda environment from `dev_environment.yml`
   conda env create --force -f dev_environment.yml
