@@ -7,8 +7,9 @@ CONFIG = {
 
 BLUEPRINTS = [
     "overview",
+    "upload",
     "validation",
-    'wheel',
-    'statistics',
-    'enrichment',
+    "wheel",
+    "statistics",
+    "enrichment",
 ]
