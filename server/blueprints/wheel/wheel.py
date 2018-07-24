@@ -51,7 +51,7 @@ def get_wheel_data():
     #np_mtx[:, 0] = np.ones(elem_num)
     #colors = ['gray'] * elem_num
     names = ['sto:IEC_62541', 'rdf:type', 'dcterms:hasLicense', 'sto:hasClassification', 'sto:hasDeveloper', 'dcterms:subject', 'sto:hasDomain', 'sto:hasPublisher', 'sto:relatedTo', 'sto:useStructureOf', 'sto:hasDBpediaResource', 'sto:hasOfficialResource', 'sto:hasTag', 'sto:hasWikipediaArticle', 'dcterms:hasLicense', 'lingg:hypernym', 'rdfs:comment', 'rdfs:label']
-    colors = ['gray', 'lightblue', 'lightgray', 'lightgray', 'lightgray', 'lightgreen', 'lightgray', 'lightgray', 'lightgray', 'lightgreen', 'lightgray', 'lightgray', 'lightgray', 'lightgray', 'lightgray', 'lightgreen', 'lightgray', 'lightgray']
+    colors = ['gray', 'lightblue', 'lightgray', 'lightgray', 'lightgray', 'lightgreen', 'lightgray', 'lightgray', 'lightblue', 'lightgreen', 'lightsalmon', 'lightsalmon', 'lightgray', 'lightsalmon', 'lightgray', 'lightgreen', 'lightblue', 'lightgray']
     mtx = np.zeros((len(names), len(names))).astype(int)
     mtx[:, 0] = np.ones(len(names))
 

@@ -3,12 +3,12 @@ h1 { color: blue; }
 body { margin: 0; }
 
 .head {
-  height: 70px;
+  height: 50px;
   color: white;
   background-color: #008b8b;
   margin: auto 0;
   padding: 10px;
-  font-size: 62px;
+  font-size: 42px;
   display: flex;
   flex-direction: row;
 }

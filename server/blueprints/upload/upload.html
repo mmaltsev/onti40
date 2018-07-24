@@ -1,0 +1,51 @@
+{% extends "app.html" %}
+{% block content %}
+<!--img src="assets/spinner.gif" id="spinner" /-->
+<div style="display: flex; flex-direction: column; width: 100%;">
+  <div style="display: flex; flex-direction: row; justify-content: space-between;">
+    <div id="drop-area">
+      <label for="fileElem">
+        <form class="my-form">
+          <img src="assets/upload.svg" id="upload-img" />
+          <p id="upload-text">Upload the ontology in the .ttl format</p>
+          <input type="file" id="fileElem" accept="text/turtle" onchange="uploadFile(this.files[0])">
+        </form>
+      </label>
+     </div>
+    <div class="enrichment-properties">
+      <div class="checkbox-block">
+        <div class="enrichment-properties-head">Enrichment Properties</div>
+        <div id="link-select" style="margin: 10px 15px 5px 15px;">Link with <select style="padding: 5px;"><option>DBpedia</option></select> via <input type="text" style="padding: 5px;" /></div>
+        <div class="checkbox"><label><input type="checkbox" name="feature" value="ovstats" checked />Overall statistics</label></div>
+        <div class="checkbox"><label><input type="checkbox" name="feature" value="enstats" checked />Enrichment statistics</label></div>
+        <div class="checkbox"><label><input type="checkbox" name="feature" value="ont" checked />Enriched Ontology in Turtle</label></div>
+        <div class="checkbox"><label><input type="checkbox" name="feature" value="shacl" checked />SHACL report</label></div>
+        <div class="checkbox"><label><input type="checkbox" name="feature" value="wheel" checked />Wheel visualization</label></div>
+        <div class="checkbox"><label><input type="checkbox" name="feature" value="tree" checked />Tree visualization</label></div>
+        <div class="checkbox"><label><input type="checkbox" name="feature" value="logs" checked />Logs</label></div>
+      </div>
+      <div class="button" onclick="launchEnrichment()">Launch Enrichment Process</div>
+    </div>
+  </div>
+  <span id="errorMessage">Uploaded file has a wrong format. Expected a filename with .ttl extension.</span>
+  <div class="info-block">
+    <div class="info">
+      <!--img src="" class="info-img" /-->
+      <div class="info-img">1</div>
+      <div class="info-text">Upload the Turtle-syntax (.ttl) file by dragging and dropping or with the file dialog by clicking onto the dashed region.</div>
+    </div>
+    <div class="info">
+      <!--img src="" class="info-img" /-->
+      <div class="info-img">2</div>
+      <div class="info-text">Specify enrichment properties by checking / unchecking the outcome that you want to see on the result page.</div>
+    </div>
+    <div class="info">
+      <!--img src="" class="info-img" /-->
+      <div class="info-img">3</div>
+      <div class="info-text">Click "Launch Enrichment Process" button. The processing might take around a minute depending on the size of the ontology.</div></div>
+  </div>
+</div>
+
+<script src="upload.js"></script>
+
+{% endblock %}

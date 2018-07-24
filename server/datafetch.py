@@ -1,6 +1,7 @@
 from server.landscape import Ontology
 
-ont = Ontology('https://rawgit.com/i40-Tools/StandardOntology/master/sto.ttl')
+ont = Ontology('https://rawgit.com/mmaltsev/onti40/master/server/assets/ttl/sto.ttl')
+# ('https://rawgit.com/i40-Tools/StandardOntology/master/sto.ttl')
 
 def fetch_sto_data(ont_query, dict_props):
     data = []
