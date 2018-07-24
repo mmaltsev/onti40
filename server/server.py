@@ -10,7 +10,7 @@ from server.helper import log_cmd, module_import
 
 
 def create_app_without_blueprints():
-    """Configure the app w.r.t. everything expect Blueprints."""
+    """Configure the app w.r.t. everything except Blueprints."""
     app = Flask(__name__,
                 instance_relative_config=True,
                 static_folder='app',
