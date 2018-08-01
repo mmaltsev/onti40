@@ -7,6 +7,7 @@ CONFIG = {
 
 BLUEPRINTS = [
     "upload",
+    "result",
     "overview",
     "validation",
     "wheel",

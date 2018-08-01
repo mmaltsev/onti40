@@ -29,3 +29,10 @@ def upload_file():
     filename = secure_filename(file.filename)
     file.save(os.path.join(upload_path, filename))
     return 'success'
+
+@upload_handler.route('/enrich', methods=['POST'])
+def enrich():
+    log_cmd('Requested enrich', 'green')
+    data = request.get_json()['kg']
+    print(data)
+    return 'success'

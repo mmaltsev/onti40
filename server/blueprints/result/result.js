@@ -110,9 +110,8 @@ function launchEnrichment() {
     return
   }
   console.log(params)
-  //let redirectUrl = '/result?params=' + JSON.stringify(params)
-  //window.location.replace(redirectUrl)
-  postRequest('/upload/enrich', params, (data) => { console.log(data) })
+  let redirectUrl = '/result?params=' + JSON.stringify(params)
+  window.location.replace(redirectUrl)
 }
 
 function setSpinner(isSpinner) {
