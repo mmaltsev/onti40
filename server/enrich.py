@@ -1,23 +1,48 @@
 """Module for enlarging existing ontology based on knowledge from DBpedia.
 """
 
-from landscape import Ontology, DBpedia
+from server.landscape import Ontology, DBpedia
 import json
 import sys
 
-def main(options_path):
-    """Main function.
-    Describes abstract algorithm of the ontology enriching.
-    """
-
+def main_cmd(options_path):
     options = json.load(open(options_path))
-    ont = Ontology(options["input_file"])
     ont_query = """
         PREFIX sto: <https://w3id.org/i40/sto#>
         SELECT ?sub ?dbPediaResource WHERE {
             ?sub sto:hasDBpediaResource ?dbPediaResource .
         }
     """
+    ont = main(options, ont_query)
+    filename = get_filename(options["input_file"])
+    full_filename = 'ttl/' + filename + '(enriched).ttl'
+    print('...saving file as "' + full_filename + '"')
+    ont_file = ont.export(full_filename)
+
+def main_upload(ttl_file, params):
+    options = {
+        "input_file": ttl_file,
+        "whitelist": [],
+        "blacklist": [],
+        "prefixes": []
+    }
+    #print(type(params))
+    #print(params)
+    #print(params['pred'])
+    ont_query = """
+        PREFIX sto: <https://w3id.org/i40/sto#>
+        SELECT ?sub ?res WHERE {
+            ?sub """ + params['pred'] + """ ?res .
+        }
+    """
+    ont = main(options, ont_query)
+    return ont.export(None)
+
+def main(options, ont_query):
+    """Main function.
+    Describes abstract algorithm of the ontology enriching.
+    """
+    ont = Ontology(options["input_file"])
     print('...starting enrichment process')
     total_added_triples_num = 0
     total_subj_num = 0
@@ -41,13 +66,10 @@ def main(options_path):
         total_subj_num += 1
     
     ont = set_prefixes(ont, options["prefixes"])
-    filename = get_filename(options["input_file"])
-    full_filename = 'ttl/' + filename + '(enriched).ttl'
-    ont.export(full_filename)
     print('') # for moving to the next line in the command line
-    print('...saving file as "' + full_filename + '"')
     print('Enriched ' + str(total_subj_num) + ' subjects with ' + \
       str(total_added_triples_num) + ' triples.')
+    return ont
 
 
 def enrich(ont, subject, dbpedia_result):
@@ -74,7 +96,6 @@ def enrich(ont, subject, dbpedia_result):
 def get_filename(path):
     """Getter of file name from path.
     """
-
     full_file_name = path.split('/')[-1]
     file_name = full_file_name.split('.')[0]
     return file_name
@@ -110,5 +131,7 @@ def set_prefixes(ont, prefixes):
 
 
 if __name__ == "__main__":
-``   AZXSwde4r56yhjn b __[]]__
-
+    if len(sys.argv) == 3:
+        main(sys.argv[2])
+    else:
+        print('ERROR: wrong number of arguments.')

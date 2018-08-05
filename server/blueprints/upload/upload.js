@@ -1,11 +1,8 @@
 // setSpinner(true)
-/*getRequest(
-  'https://rawgit.com/i40-Tools/StandardOntology/master/sto.ttl',
-  (data) => console.log(data)
-)*/
 
 let dropArea = document.getElementById('drop-area')
 let isUploaded = false
+let formData
 eventHandler()
 disablePropertiesBlock()
 
@@ -45,21 +42,18 @@ function uploadFile(file) {
   let fileName = file.name
   let fileFormat = fileName.split('.').pop()
   if (fileFormat === 'ttl') {
-    let formData = new FormData()
-    formData.append('file', file)
-    postRequest(
-      '/upload/file',
-      formData,
-      (data) => {
-        console.log(data)
-        if (data === 'success') {
-          enablePropertiesBlock()
-          document.getElementById('upload-text').innerText = fileName
-          document.getElementById('upload-img').src = 'assets/file.png'
-          isUploaded = true
-        }
-      },
-    )
+    fileReader = new FileReader()
+    fileReader.onload = function (evt) {
+      let file_data = evt.target.result
+      sessionStorage.setItem('ttl_file', file_data)
+      sessionStorage.setItem('ttl_file_name', fileName)
+    }
+    fileReader.readAsDataURL(file)
+
+    enablePropertiesBlock()
+    document.getElementById('upload-text').innerText = fileName
+    document.getElementById('upload-img').src = 'assets/file.png'
+    isUploaded = true
   } else {
     document.getElementById('errorMessage').style.opacity = '1'
   }
@@ -95,12 +89,13 @@ function launchEnrichment() {
   let checkboxList = document.getElementsByClassName('checkbox')
   for (let checkboxElement of checkboxList) {
     let key = checkboxElement.getElementsByTagName('input')[0].value
-    let value = checkboxElement.getElementsByTagName('input')[0].checked
+    let value = '' + checkboxElement.getElementsByTagName('input')[0].checked
     params[key] = value
   }
   params['kg'] = document.getElementById('link-select').getElementsByTagName('select')[0].value
   params['pred'] = document.getElementById('link-select').getElementsByTagName('input')[0].value
-  console.log(params['kg'], params['pred'])
+  // DELETE
+  params['pred'] = 'sto:hasDBpediaResource'
   if (params['kg'] === '') {
     document.getElementById('link-select').getElementsByTagName('select')[0].style.borderColor = 'red'
     return
@@ -109,10 +104,9 @@ function launchEnrichment() {
     document.getElementById('link-select').getElementsByTagName('input')[0].style.borderColor = 'red'
     return
   }
-  console.log(params)
-  //let redirectUrl = '/result?params=' + JSON.stringify(params)
-  //window.location.replace(redirectUrl)
-  postRequest('/upload/enrich', params, (data) => { console.log(data) })
+  sessionStorage.setItem('params_file', JSON.stringify(params))
+  let redirectUrl = '/result?params=' + JSON.stringify(params)
+  window.open(redirectUrl)
 }
 
 function setSpinner(isSpinner) {

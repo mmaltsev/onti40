@@ -59,6 +59,8 @@ class Ontology(object):
     def export(self, filename):
         """Saves generated ontology as a turtle file.
         """
+        if filename == None:
+            return self.graph.serialize(destination=filename, format='turtle')
         self.graph.serialize(destination=filename, format='turtle')
 
     def add(self, sub, pred, obj):
