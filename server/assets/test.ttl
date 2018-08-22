@@ -1,0 +1,16 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sto: <https://w3id.org/i40/sto#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+###  https://w3id.org/i40/sto#BBF_TR-069
+sto:BBF_TR-069 rdf:type owl:NamedIndividual ,
+                        sto:Standard ;
+               sto:developer sto:BBF ;
+               sto:publisher sto:BBF ;
+               sto:hasDBpediaResource "http://dbpedia.org/resource/TR-069" ;
+               sto:hasOfficialResource "https://www.broadband-forum.org/standards-and-software/technical-specifications/tr-069-files-tools" ;
+               sto:hasWikipediaArticle "https://en.wikipedia.org/wiki/TR-069" ;
+               rdfs:comment "Digital Enhanced Cordless Telecommunications (DECT™) is the ETSI standard for short-range cordless communications, which can be adapted for many applications and can be used over unlicensed frequency allocations world-wide."@en ;
+               rdfs:label "BBF TR-069"@en ;
+               sto:hasTag "CPE WAN Management Protocol"@en .

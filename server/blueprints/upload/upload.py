@@ -2,7 +2,10 @@
 import os
 from flask import Blueprint, render_template, url_for, jsonify, request
 from server.helper import log_cmd
+from server.enrich import main_upload
 from werkzeug.utils import secure_filename
+import time
+import json
 
 upload_handler = Blueprint(name='upload',
                             import_name=__name__,
@@ -26,6 +29,6 @@ def upload_file():
     upload_folder = 'files'
     upload_path = os.path.join(current_path, upload_folder)
     file = request.files['file']
-    filename = secure_filename(file.filename)
+    filename = secure_filename(file.filename) + str(int(time.time()))
     file.save(os.path.join(upload_path, filename))
-    return 'success'
+    return jsonify({ 'filename': filename })
