@@ -36,7 +36,7 @@
   display: flex;
   flex-direction: column;
   background-color: #f8f8f8;
-  width: 150px;
+  width: 300px;
   border: 1px solid lightgray;
 }
   
@@ -48,3 +48,26 @@
   padding: 5px;
   text-align: center;
 }
+
+.legend {
+  background: #f8f8f8;
+  width: 290px;
+  position: absolute;
+  top: 98px;
+  right: 0;
+  border: 1px solid lightgray;
+  padding: 5px;
+}
+
+.legend-element {
+  display: flex;
+  align-items: center;
+}
+
+.legend-color {
+  margin-left: 20px;
+  width: 40px;
+  height: 10px;
+}
+
+.legend-title { margin-left: 25px; }

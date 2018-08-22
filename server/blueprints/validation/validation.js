@@ -1,8 +1,21 @@
 setSpinner(true)
-getRequest(
-  'https://rawgit.com/i40-Tools/StandardOntology/master/sto.ttl',
-  (data) => getRequest('/validation/template', (shapes) => getShacl(data, shapes))
-)
+let ontologyDataURI = sessionStorage.getItem('ttl_file') || ''
+if (ontologyDataURI !== '') {
+  // cut the "data:;base64," and  "==" parts from the URI
+  let ontologyBaseData = ontologyDataURI.substring(13, ontologyDataURI.length - 2)
+  let ontologyData = atob(ontologyBaseData)
+  let templateDataURI = sessionStorage.getItem('shacl_template') || ''
+  if (templateDataURI !== '') {
+    let templateBaseData = templateDataURI.substring(13, templateDataURI.length - 2)
+    let templateData = atob(templateBaseData)
+    getShacl(ontologyData, templateData)
+  } else {
+    getRequest(
+      '/validation/template', 
+      (shapes) => getShacl(ontologyData, shapes)
+    )
+  }
+}
 
 var reportObj = {}
 
@@ -129,6 +142,44 @@ function addPrefix(uri) {
     }
   }
   return uri
+}
+
+function uploadFile(file) {
+  let fileName = file.name
+  let fileFormat = fileName.split('.').pop()
+  if (fileFormat === 'ttl') {
+    fileReader = new FileReader()
+    fileReader.onload = function (evt) {
+      let file_data = evt.target.result
+      sessionStorage.setItem('ttl_file', file_data)
+      sessionStorage.setItem('ttl_file_name', fileName)
+    }
+    fileReader.readAsDataURL(file)
+
+    enablePropertiesBlock()
+    document.getElementById('upload-text').innerText = fileName
+    document.getElementById('upload-img').src = 'assets/file.png'
+    isUploaded = true
+  } else {
+    document.getElementById('errorMessage').style.opacity = '1'
+  }
+}
+
+function dataURItoBlob(dataURI) {
+  // convert base64 to raw binary data held in a string
+  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+  var byteString = atob(dataURI.split(',')[1]);
+
+  // separate out the mime component
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+  // write the bytes of the string to an ArrayBuffer
+  var ab = new ArrayBuffer(byteString.length);
+  var ia = new Uint8Array(ab);
+  for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ab], {type: mimeString});
 }
 
 function setSpinner(isSpinner) {

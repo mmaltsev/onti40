@@ -1,24 +1,52 @@
 {% extends "app.html" %}
 {% block content %}
-<!--img src="assets/spinner.gif" id="spinner" /-->
-<div style="display: flex; width: 100%; padding: 0 20px; justify-content: space-around;">
+<img src="assets/spinner.gif" id="spinner" />
+<div class="card-grid">
+  <div class="card">
+    <div class="card-head">Original Ontology Statistics</div>
+    <div class="card-content" id="ont-stats"></div>
+  </div>
+  <div class="card">
+    <div class="card-head">Enrichment Statistics</div>
+    <div class="card-content" id="enr-stats"></div>
+  </div>
+  <div class="card">
+    <div class="card-head">Logs</div>
+    <div class="card-content" id="enr-logs"></div>
+  </div>
   <div class="card">
     <div class="card-head">Download Enriched Ontology</div>
-    <div class="card-content" style="text-align: center; cursor: pointer;" onclick="downloadClick()">
-      <img style="width: 100px;" src="assets/file_white.png" />
+    <div class="card-content download" onclick="downloadClick()"></div>
+  </div>
+  <div class="card">
+    <div class="card-head">Ontology Graph Visualization</div>
+    <a href="/graph" target="_blank">
+      <div class="card-content graph"></div>
+    </a>
+  </div>
+  <div class="card">
+    <div class="card-head">Enrichment Wheel Visualization</div>
+    <a href="/wheel" target="_blank">
+      <div class="card-content wheel"></div>
+    </a>
+  </div>
+  <div class="card">
+    <div class="card-head">SHACL Configuration</div>
+    <div class="card-content shacl-conf">
+      <span>Upload custom <a href="https://www.w3.org/TR/shacl/" style="color: white;">SHACL</a> template</span>
+      <label for="SHACLFile">
+        <form class="my-form">
+          <input type="file" id="SHACLFile" accept="text/turtle" onchange="uploadFile(this.files[0])">
+        </form>
+      </label>
+      <span>by default the <a href="https://github.com/i40-Tools/STO_SHACL/blob/master/src/template.ttl" target="_blank" style="color: white;">STO SHACL tempate</a> is used</span>
     </div>
   </div>
   <div class="card">
-    <div class="card-head">Download Enriched Ontology</div>
-    <div class="card-content"></div>
-  </div>
-  <div class="card">
-    <div class="card-head">Download Enriched Ontology</div>
-    <div class="card-content"></div>
-  </div>
-  <div class="card">
-    <div class="card-head">Download Enriched Ontology</div>
-    <div class="card-content"></div>
+    <div class="card-head">SHACL Report</div>
+    <a href="/validation" target="_blank">
+      <div class="card-content shacl-rep"></div>
+    </a>
   </div>
 </div>
 

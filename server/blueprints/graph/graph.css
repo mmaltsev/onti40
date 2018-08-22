@@ -1,0 +1,8 @@
+#cy {
+    width: 100%;
+    height: calc(100% - 70px);
+    position: absolute;
+    left: 0;
+    top: 70px;
+    z-index: 999;
+}

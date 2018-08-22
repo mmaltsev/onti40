@@ -4,6 +4,8 @@
 from server.landscape import Ontology, DBpedia
 import json
 import sys
+import time
+import math
 
 def main_cmd(options_path):
     options = json.load(open(options_path))
@@ -13,7 +15,7 @@ def main_cmd(options_path):
             ?sub sto:hasDBpediaResource ?dbPediaResource .
         }
     """
-    ont = main(options, ont_query)
+    ont, enr_stats, ont_stats, subs_data = main(options, ont_query)
     filename = get_filename(options["input_file"])
     full_filename = 'ttl/' + filename + '(enriched).ttl'
     print('...saving file as "' + full_filename + '"')
@@ -26,26 +28,61 @@ def main_upload(ttl_file, params):
         "blacklist": [],
         "prefixes": []
     }
-    #print(type(params))
-    #print(params)
-    #print(params['pred'])
     ont_query = """
         PREFIX sto: <https://w3id.org/i40/sto#>
         SELECT ?sub ?res WHERE {
             ?sub """ + params['pred'] + """ ?res .
         }
     """
-    ont = main(options, ont_query)
-    return ont.export(None)
+    start = time.time()
+    ont, enr_stats, ont_stats, subs_data = main(options, ont_query)
+    end = time.time()
+    enr_logs = {
+        "enr_time": math.ceil(end - start)
+    }
+    return ont.export(None), enr_stats, enr_logs, ont_stats, subs_data
+
+def ontology_stats(ont):
+    stats_query = """
+        SELECT (COUNT(?sub) as ?trip_num) (COUNT(DISTINCT ?sub) as ?sub_num) (COUNT(DISTINCT ?pred) as ?pred_num) (COUNT(DISTINCT ?obj) as ?obj_num)
+        WHERE {
+            ?sub ?pred ?obj .
+        }
+    """
+    #ont = Ontology(ttl_file)
+    ont_stats = {}
+    for row in ont.query(stats_query):
+        ont_stats['trip_num'] = int(row[0])
+        ont_stats['subj_num'] = int(row[1])
+        ont_stats['pred_num'] = int(row[2])
+        ont_stats['obj_num'] = int(row[3])
+    subs_data = {}
+    subs_data_query = """
+        SELECT ?sub ?pred WHERE {
+            ?sub ?pred ?obj .
+        }
+    """
+    for row in ont.query(subs_data_query):
+        subject = str(row[0])
+        predicate = str(row[1])
+        if subject in subs_data:
+            if predicate not in subs_data[subject]:
+                subs_data[subject].append(predicate)
+        else:
+            subs_data[subject] = [predicate]
+    return ont_stats, subs_data
+
 
 def main(options, ont_query):
     """Main function.
     Describes abstract algorithm of the ontology enriching.
     """
     ont = Ontology(options["input_file"])
+    ont_stats, subs_data = ontology_stats(ont)
     print('...starting enrichment process')
     total_added_triples_num = 0
     total_subj_num = 0
+    updated = {}
     for row in ont.query(ont_query):
         subject = row[0]
         resource = get_resource(row[1])
@@ -61,15 +98,20 @@ def main(options, ont_query):
 
         print('/', sep=' ', end='', flush=True)
         ont = set_blacklist(ont, options["blacklist"])
-        ont, added_triples_num = enrich(ont, subject, dbpedia_result)
+        ont, added_triples_num, added_preds = enrich(ont, subject, dbpedia_result)
+        updated[subject] = added_preds
         total_added_triples_num += added_triples_num
         total_subj_num += 1
-    
     ont = set_prefixes(ont, options["prefixes"])
     print('') # for moving to the next line in the command line
     print('Enriched ' + str(total_subj_num) + ' subjects with ' + \
       str(total_added_triples_num) + ' triples.')
-    return ont
+    enr_stats = {
+        "subj_num": total_subj_num,
+        "trip_num": total_added_triples_num,
+        "updated": updated
+    }
+    return ont, enr_stats, ont_stats, subs_data
 
 
 def enrich(ont, subject, dbpedia_result):
@@ -77,6 +119,7 @@ def enrich(ont, subject, dbpedia_result):
     """
     
     added_triples_num = 0
+    added_preds = []
     for triple in dbpedia_result:
         sub = { 'value': subject }
         pred = triple['pred']
@@ -90,7 +133,9 @@ def enrich(ont, subject, dbpedia_result):
         if pred['value'] not in ont.blacklist and \
            obj['value'] != 'http://rdf.freebase.com/ns/':
             added_triples_num += ont.enrich(sub, pred, obj)
-    return ont, added_triples_num
+            if pred['value'] not in added_preds:
+                added_preds.append(pred['value'])
+    return ont, added_triples_num, added_preds
 
 
 def get_filename(path):

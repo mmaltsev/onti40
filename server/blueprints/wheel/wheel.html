@@ -6,12 +6,29 @@
   <div id="chart"></div>
   <div class="wheel-menu">
     <div class="menu-element" onclick="saveAsPng()">Save as PNG</div>
-    <select class="menu-element" onchange="optionChange()">
-      <option>IEC_62541</option>
-      <!--{% for option in options %}
-        <option>{{ option }}</option>
-      {% endfor %}-->
-    </select>
+    <select class="menu-element" id="optionsSelect"></select>
+  </div>
+  <div class="legend">
+    <div class="legend-element">
+      <div class="legend-color" style="background: gray;"></div>
+      <span class="legend-title">-</span>
+      <span class="legend-title">Subject node</span>
+    </div>
+    <div class="legend-element">
+      <div class="legend-color" style="background: lightgray;"></div>
+      <span class="legend-title">-</span>
+      <span class="legend-title">Unchanged predicate</span>
+    </div>
+    <div class="legend-element">
+      <div class="legend-color" style="background: lightgreen;"></div>
+      <span class="legend-title" >-</span>
+      <span class="legend-title" >Predicate with new objects</span>
+     </div>
+     <div class="legend-element">
+      <div class="legend-color" style="background: lightblue;"></div>
+      <span class="legend-title" >-</span>
+      <span class="legend-title" >Newly added predicate</span>
+    </div>
   </div>
 </div>
 

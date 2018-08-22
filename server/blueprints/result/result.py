@@ -28,8 +28,12 @@ def enrich():
     params_file = request.files['params']
     prom = params_file.read()
     params = json.loads(prom.decode('utf8'))
+    enr_ttl, enr_stats, enr_logs, ont_stats, subs_data = main_upload(ttl_file, params)
     result_dict = {
-        "format": "ttl",
-        "enriched_ttl": main_upload(ttl_file, params).decode('utf8')
+        "enr_ttl": enr_ttl.decode('utf8'),
+        "enr_logs": enr_logs,
+        "ont_stats": ont_stats,
+        "enr_stats": enr_stats,
+        "subs_data": subs_data
     }
     return jsonify(result_dict)

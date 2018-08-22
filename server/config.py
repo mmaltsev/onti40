@@ -11,6 +11,7 @@ BLUEPRINTS = [
     "overview",
     "validation",
     "wheel",
+    "graph",
     "statistics",
     "enrichment",
 ]
