@@ -1,8 +1,8 @@
 {% extends "app.html" %}
 {% block content %}
 <!--img src="assets/spinner.gif" id="spinner" /-->
-<div style="display: flex; flex-direction: column; width: 100%;">
-  <div style="display: flex; flex-direction: row; justify-content: space-between;">
+<div class="content-wrap">
+  <div class="top-side">
     <div id="drop-area">
       <label for="fileElem">
         <form class="my-form">
@@ -15,7 +15,7 @@
     <div class="enrichment-properties">
       <div class="checkbox-block">
         <div class="enrichment-properties-head">Enrichment Properties</div>
-        <div id="link-select" style="margin: 10px 15px 5px 15px;">Link with <select style="padding: 5px;"><option>DBpedia</option></select> via <input type="text" style="padding: 5px;" /></div>
+        <div id="link-select">Link with <select style="padding: 5px;"><option>DBpedia</option></select> via <input type="text" class="text-input" /></div>
         <div class="checkbox"><label><input type="checkbox" name="feature" value="ovstats" checked />Overall statistics</label></div>
         <div class="checkbox"><label><input type="checkbox" name="feature" value="enstats" checked />Enrichment statistics</label></div>
         <div class="checkbox"><label><input type="checkbox" name="feature" value="ont" checked />Enriched Ontology in Turtle</label></div>

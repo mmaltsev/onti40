@@ -1,3 +1,15 @@
+.content-wrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.top-side {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 #drop-area {
   border: 2px dashed #ccc;
   border-radius: 20px;
@@ -8,6 +20,12 @@
   background: #f8f8f8;
   cursor: pointer;
   width: 70%;
+  user-drag: none; 
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 #drop-area.highlight {
@@ -29,6 +47,10 @@ p {
   cursor: pointer;
 }
 
+.link-select { margin: 10px 15px 5px 15px; }
+
+.text-input { padding: 5px; }
+
 .button {
   display: inline-block;
   padding: 10px;
@@ -41,13 +63,9 @@ p {
   color: white;
 }
 
-.button:hover {
-  background: #037272;
-}
+.button:hover { background: #037272; }
 
-#fileElem {
-  display: none;
-}
+#fileElem { display: none; }
 
 .info {
   border: 1px solid #008b8b;
@@ -60,6 +78,13 @@ p {
 }
 
 #upload-img { width: 200px; }
+
+#upload-text {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 
 .enrichment-properties {
   display: flex;
