@@ -6,19 +6,65 @@ postOntologyData()
 function postOntologyData() {
   let formData = new FormData()
   let ttlData = sessionStorage.getItem('enriched_ttl')
+  let ttlDataURI = sessionStorage.getItem('ttl_file')
+  let ttlBlob = dataURItoBlob(ttlDataURI)
   let subsData = sessionStorage.getItem('subs_data')
   let prefixes = JSON.stringify(extractPrefixes())
-  console.log(prefixes)
-  let ttlDataBlob = new Blob([ttlData], {type: 'text/turtle'})
+  let ttlDataShort = shortenTtl(ttlData)
+  //let ttlDataShort = ttlData.replace(/\n/g, '')
+  //ttlDataShort = ttlData.replace(/ """([^@]+)"""@/g, '" "@')
+  //ttlDataShort = ttlData.replace(/ "([^@;]+)"@/g, '" "@')
+  //ttlDataShort = ttlDataShort.replace(/"""([^"]+)"""/g, '""')
+  //ttlDataShort = ttlDataShort.replace(/"""([^"]+)"/g, '""')
+  //ttlDataShort = ttlDataShort.replace(/"([^"]+)"/g, '""')
+  //ttlDataShort = ttlDataShort.replace(/'''([^"]+)'''/g, '""')
+  //console.log(ttlDataShort)
+  let ttlDataBlob = new Blob([ttlDataShort], {type: 'text/turtle'})
   let subsDataBlob = new Blob([subsData], {type: 'application/json'})
   let prefixesBlob = new Blob([prefixes], {type: 'application/json'})
-  formData.append('enriched_ttl', ttlDataBlob)
+  formData.append('enriched_ttl', ttlBlob)
   formData.append('subs_data', subsDataBlob)
   formData.append('prefixes', prefixesBlob)
   postRequest('/graph/data', formData, (data) => {
     console.log(data)
+    setSigma(data['cl_data'])
     setCy(data['cl_data'])
   })
+}
+
+function dataURItoBlob(dataURI) {
+  // convert base64 to raw binary data held in a string
+  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+  var byteString = atob(dataURI.split(',')[1]);
+
+  // separate out the mime component
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+  // write the bytes of the string to an ArrayBuffer
+  var ab = new ArrayBuffer(byteString.length);
+  var ia = new Uint8Array(ab);
+  for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ab], {type: mimeString});
+}
+
+function shortenTtl(str) {
+  while (str.search('"""') > -1) {
+    let openQuotesInd = str.search('"""')
+    let closeQuotesInd = str.substring(openQuotesInd + 3, str.length).search('"""')
+    let strToCut = str.substring(openQuotesInd, closeQuotesInd + openQuotesInd + 3 + 3)
+    str = str.replace(strToCut, '" "')
+  }
+  let strToSearch = str
+  while (strToSearch.search('"') > -1) {
+    let openQuotesInd = strToSearch.search('"')
+    let closeQuotesInd = strToSearch.substring(openQuotesInd + 1, strToSearch.length).search('"@')
+    let strToCut = strToSearch.substring(openQuotesInd, closeQuotesInd + openQuotesInd + 1 + 2)
+    str = str.replace(strToCut, '""@')
+    strToSearch = strToSearch.substring(closeQuotesInd + openQuotesInd + 1 + 2, strToSearch.length)
+  }
+  return str
 }
 
 function extractPrefixes() {
@@ -88,6 +134,13 @@ function spinner(isActive) {
     document.getElementById('container').style.opacity = 1
     document.getElementById('spinner').style.display = 'none'
   }
+}
+
+function setSigma(g) {
+  s = new sigma({
+    graph: g,
+    container: 'graph-container'
+  });
 }
 
 function setCy(elements) {
@@ -174,10 +227,37 @@ function getStyle() {
         "text-outline-color": "#555",
       }
     }, {
-      "selector": "node[group=\"enriched\"]",
+      "selector": "node[group=\"subject\"]",
+      "style": {
+        "height": 200,
+        "width": 200,
+        "font-size": "24px",
+        "background-color": "#555",
+        "text-outline-color": "#555",
+      }
+    }, {
+      "selector": "node[group=\"URIRef\"]",
       "style": {
         "background-color": "lightblue",
         "text-outline-color": "lightblue",
+      }
+    }, {
+      "selector": "node[group=\"Literal\"]",
+      "style": {
+        "background-color": "#75a3b2",
+        "text-outline-color": "#75a3b2",
+      }
+    }, {
+      "selector": "node[group=\"BNode\"]",
+      "style": {
+        "background-color": "#518191",
+        "text-outline-color": "#518191",
+      }
+    }, {
+      "selector": "node[group=\"enriched\"]",
+      "style": {
+        "background-color": "lightgreen",
+        "text-outline-color": "lightgreen",
       }
     }, {
       "selector": "edge",

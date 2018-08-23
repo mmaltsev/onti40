@@ -11,6 +11,7 @@
         "http://dbpedia.org/ontology/wikiPageID",
         "http://dbpedia.org/ontology/wikiPageRevisionID",
         "http://dbpedia.org/ontology/wikiPageExternalLink",
+        "http://dbpedia.org/ontology/wikiPageWikiLink",
         "http://purl.org/voc/vrank#hasRank",
         "http://xmlns.com/foaf/0.1/depiction"
     ],

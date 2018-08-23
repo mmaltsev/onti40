@@ -4,12 +4,19 @@ from server.helper import log_cmd
 from server.landscape import Ontology
 from server.datafetch import fetch_sto_data
 import json
+from io import StringIO
+import re
 
 def set_prefix(name, prefixes):
     for prefix in prefixes:
         if name.find(prefix) > -1:
             name = name.replace(prefix, prefixes[prefix] + ':')
             return name
+    return name
+    splited_name = name.split('#')
+    if len(splited_name) == 1:
+        splited_name = name.split('/')
+    return splited_name[-1]
 
 graph_handler = Blueprint(name='graph',
                             import_name=__name__,
@@ -38,36 +45,37 @@ def get_graph_data():
     prefixes_file = request.files['prefixes']
     prom_prefixes = prefixes_file.read()
     prefixes = json.loads(prom_prefixes.decode('utf8'))
-
     ont = Ontology(enriched_ttl_file, 'Enriched Ontology')
+    print('after')
     subjs = {}
     for key in subs_data:
         subjs[key] = None
     ind = 0
-    cl_data = []
-
+    cy_data = []
     for subj, pred, obj in ont.graph:
+        # print(type(subj), type(pred), type(obj))
+        # print(subj, pred, obj)
+        # print(str(subj), str(pred), str(obj))
         subj_name = str(subj)
-        if subjs[subj_name] != None:
+        if subj_name in subjs and subjs[subj_name] != None:
             subj_id = subjs[subj_name]
         else:
             subj_id = ind
             subjs[subj_name] = subj_id
             ind += 1
             subj_name_short = set_prefix(subj_name, prefixes)
-            cl_subj = {
+            cy_subj = {
                 "data": {
                   "id": str(subj_id),
-                  "idInt": subj_id,
                   "name": subj_name_short,
-                  "score": 0.1,
-                  "group": "default",
+                  "group": "subject",
                 },
                 "group": "nodes"
             }
-            cl_data.append(cl_subj)
+            cy_data.append(cy_subj)
 
         obj_name = str(obj)
+        is_subj = True
         if obj in subjs:
             if subjs[obj_name]:
                 obj_id = subjs[obj_name]
@@ -76,44 +84,40 @@ def get_graph_data():
                 subjs[obj_name] = obj_id
                 ind += 1
                 obj_name_short = set_prefix(obj_name, prefixes)
-                cl_obj = {
+                cy_obj = {
                     "data": {
                       "id": str(obj_id),
-                      "idInt": obj_id,
                       "name": obj_name_short,
-                      "score": 0.1,
-                      "group": "default",
+                      "group": "subject",
                     },
                     "group": "nodes"
                 }
-            cl_data.append(cl_obj)
+            cy_data.append(cy_obj)
         else:
             obj_name = type(obj).__name__
             obj_id = ind
             ind += 1
-            obj_name_short = set_prefix(obj_name, prefixes)
-            cl_obj = {
+            is_subj = False
+            cy_obj = {
                 "data": {
                   "id": str(obj_id),
-                  "idInt": obj_id,
-                  "name": obj_name_short,
-                  "score": 0.1,
-                  "group": "default",
+                  "name": obj_name,
+                  "group": obj_name,
                 },
                 "group": "nodes"
             }
-            cl_data.append(cl_obj)
+            cy_data.append(cy_obj)
 
-        pred_name = str(pred)
-        cl_pred = {
+        # if is_subj:
+        pred_name = set_prefix(str(pred), prefixes)
+        cy_pred = {
             "data": {
               "source": str(subj_id),
               "target": str(obj_id),
-              "weight": 0.1,
               "label": pred_name,
               "group": "default",
             },
             "group": "edges"
         }
-        cl_data.append(cl_pred)
-    return jsonify({"cl_data": cl_data})
+        cy_data.append(cy_pred)
+    return jsonify({"cy_data": cy_data})

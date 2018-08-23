@@ -25,7 +25,17 @@ def main_upload(ttl_file, params):
     options = {
         "input_file": ttl_file,
         "whitelist": [],
-        "blacklist": [],
+        "blacklist": [
+            "http://dbpedia.org/ontology/thumbnail",
+            "http://dbpedia.org/ontology/wikiPageID",
+            "http://dbpedia.org/ontology/wikiPageRevisionID",
+            "http://dbpedia.org/ontology/wikiPageExternalLink",
+            "http://dbpedia.org/ontology/wikiPageWikiLink",
+            "http://purl.org/voc/vrank#hasRank",
+            "http://xmlns.com/foaf/0.1/depiction",
+            "http://dbpedia.org/ontology/abstract",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        ],
         "prefixes": []
     }
     ont_query = """
