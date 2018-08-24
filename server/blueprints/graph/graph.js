@@ -27,8 +27,11 @@ function postOntologyData() {
   formData.append('prefixes', prefixesBlob)
   postRequest('/graph/data', formData, (data) => {
     console.log(data)
-    setSigma(data['cl_data'])
-    setCy(data['cl_data'])
+    if (data['flag'] === 'sigma') {
+      setSigma(data['graph_data'])
+    } else if (data['flag'] === 'cy') {
+      setCy(data['graph_data'])
+    }
   })
 }
 
@@ -139,13 +142,30 @@ function spinner(isActive) {
 function setSigma(g) {
   s = new sigma({
     graph: g,
-    container: 'graph-container'
+    renderer: {
+      container: document.getElementById('graph-container'),
+      type: 'canvas'
+    },
+    settings: {
+      edgeLabelThreshold: 3
+    }
   });
+  // let layout algorithm pretify the graph for 1.5 secs
+  s.startForceAtlas2({
+    worker: true,
+    barnesHutOptimize: false,
+    strongGravityMode: true,
+    gravity: 0.1
+  })
+  setTimeout(() => {
+    s.killForceAtlas2()
+  }, 1500)
+  spinner(isActive = false)
 }
 
 function setCy(elements) {
   cy = window.cy = cytoscape({
-    container: document.getElementById('cy'),
+    container: document.getElementById('graph-container'),
     layout: {
       name: 'cose',
       idealEdgeLength: 100,

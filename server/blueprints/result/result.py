@@ -28,12 +28,14 @@ def enrich():
     params_file = request.files['params']
     prom = params_file.read()
     params = json.loads(prom.decode('utf8'))
-    enr_ttl, enr_stats, enr_logs, ont_stats, subs_data = main_upload(ttl_file, params)
+    enr_ttl, enr_stats, enr_logs, ont_stats, subs_data, ontology_summary = main_upload(ttl_file, params)
+    print(ontology_summary['https://w3id.org/i40/sto#IEC_42010']['added'])
     result_dict = {
         "enr_ttl": enr_ttl.decode('utf8'),
         "enr_logs": enr_logs,
         "ont_stats": ont_stats,
         "enr_stats": enr_stats,
-        "subs_data": subs_data
+        "subs_data": subs_data,
+        "ontology_summary": ontology_summary,
     }
     return jsonify(result_dict)

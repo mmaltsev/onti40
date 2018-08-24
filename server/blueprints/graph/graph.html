@@ -2,13 +2,19 @@
 {% block content %}
 
 <div id="container" class="container">
-  <div id="cy"></div>
   <div id="graph-container"></div>
+  <!--div id="cy"></div-->
   <img src="assets/spinner.gif" id="spinner" class="spinner" />
 </div>
 
-<script src="sigma.min.js"></script>
-<script src="cytoscape.min.js"></script>
+<script src="libs/sigma.min.js"></script>
+<script src="libs/worker.js"></script>
+<script src="libs/supervisor.js"></script>
+<script src="libs/settings.js"></script>
+<script src="libs/sigma.canvas.edges.labels.def.js"></script>
+<script src="libs/sigma.canvas.edges.labels.curve.js"></script>
+<script src="libs/sigma.canvas.edges.labels.curvedArrow.js"></script>
+<script src="libs/cytoscape.min.js"></script>
 <script src="graph.js"></script>
 
 {% endblock %}

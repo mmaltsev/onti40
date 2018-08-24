@@ -15,7 +15,7 @@ def main_cmd(options_path):
             ?sub sto:hasDBpediaResource ?dbPediaResource .
         }
     """
-    ont, enr_stats, ont_stats, subs_data = main(options, ont_query)
+    ont, enr_stats, ont_stats, subs_data, ontology_summary = main(options, ont_query)
     filename = get_filename(options["input_file"])
     full_filename = 'ttl/' + filename + '(enriched).ttl'
     print('...saving file as "' + full_filename + '"')
@@ -45,12 +45,59 @@ def main_upload(ttl_file, params):
         }
     """
     start = time.time()
-    ont, enr_stats, ont_stats, subs_data = main(options, ont_query)
+    ont, enr_stats, ont_stats, subs_data, ontology_summary = main(options, ont_query)
     end = time.time()
     enr_logs = {
         "enr_time": math.ceil(end - start)
     }
-    return ont.export(None), enr_stats, enr_logs, ont_stats, subs_data
+    return ont.export(None), enr_stats, enr_logs, ont_stats, subs_data, ontology_summary
+
+def set_prefix(name):
+    return name
+
+def expand_summary(ontology_summary, subject, predicate, object, isEnriched):
+    if subject not in ontology_summary:
+        ontology_summary[subject] = {
+            'predicates': {
+                predicate: {
+                    'objects': {
+                        object: {
+                            'added': isEnriched,
+                            'label': set_prefix(predicate)
+                        }
+                    },
+                    'enriched': isEnriched,
+                    'added': isEnriched,
+                    'label': set_prefix(predicate)
+                }
+            },
+            'enriched': isEnriched,
+            'added': isEnriched,
+            'label': set_prefix(subject)
+        }
+    elif predicate not in ontology_summary[subject]['predicates']:
+        ontology_summary[subject]['predicates'][predicate] = {
+            'objects': {
+                object: {
+                    'added': isEnriched,
+                    'label': set_prefix(predicate)
+                }
+            },
+            'enriched': isEnriched,
+            'added': isEnriched,
+            'label': set_prefix(predicate)
+        }
+        ontology_summary[subject]['enriched'] = ontology_summary[subject]['enriched'] or isEnriched
+    elif object not in ontology_summary[subject]['predicates'][predicate]['objects']:
+        ontology_summary[subject]['predicates'][predicate]['objects'][object] = {
+            'added': isEnriched,
+            'label': set_prefix(predicate)
+        }
+        ontology_summary[subject]['enriched'] = ontology_summary[subject]['enriched'] or isEnriched
+        ontology_summary[subject]['predicates'][predicate]['enriched'] = \
+          ontology_summary[subject]['predicates'][predicate]['enriched'] or isEnriched
+    if subject == 'https://w3id.org/i40/sto#IEC_42010':
+        print(ontology_summary['https://w3id.org/i40/sto#IEC_42010']['added'], isEnriched)
 
 def ontology_stats(ont):
     stats_query = """
@@ -68,19 +115,22 @@ def ontology_stats(ont):
         ont_stats['obj_num'] = int(row[3])
     subs_data = {}
     subs_data_query = """
-        SELECT ?sub ?pred WHERE {
+        SELECT ?sub ?pred ?obj WHERE {
             ?sub ?pred ?obj .
         }
     """
+    ontology_summary = {}
     for row in ont.query(subs_data_query):
         subject = str(row[0])
         predicate = str(row[1])
+        object = str(row[2])
+        expand_summary(ontology_summary, subject, predicate, object, False)
         if subject in subs_data:
             if predicate not in subs_data[subject]:
                 subs_data[subject].append(predicate)
         else:
             subs_data[subject] = [predicate]
-    return ont_stats, subs_data
+    return ont_stats, subs_data, ontology_summary
 
 
 def main(options, ont_query):
@@ -88,7 +138,7 @@ def main(options, ont_query):
     Describes abstract algorithm of the ontology enriching.
     """
     ont = Ontology(options["input_file"])
-    ont_stats, subs_data = ontology_stats(ont)
+    ont_stats, subs_data, ontology_summary = ontology_stats(ont)
     print('...starting enrichment process')
     total_added_triples_num = 0
     total_subj_num = 0
@@ -108,7 +158,7 @@ def main(options, ont_query):
 
         print('/', sep=' ', end='', flush=True)
         ont = set_blacklist(ont, options["blacklist"])
-        ont, added_triples_num, added_preds = enrich(ont, subject, dbpedia_result)
+        ont, added_triples_num, added_preds, ontology_summary = enrich(ont, subject, dbpedia_result, ontology_summary)
         updated[subject] = added_preds
         total_added_triples_num += added_triples_num
         total_subj_num += 1
@@ -121,15 +171,16 @@ def main(options, ont_query):
         "trip_num": total_added_triples_num,
         "updated": updated
     }
-    return ont, enr_stats, ont_stats, subs_data
+    return ont, enr_stats, ont_stats, subs_data, ontology_summary
 
 
-def enrich(ont, subject, dbpedia_result):
+def enrich(ont, subject, dbpedia_result, ontology_summary):
     """Enrichhment process wrapper.
     """
     
     added_triples_num = 0
     added_preds = []
+    enriched_ontology_summary = {}
     for triple in dbpedia_result:
         sub = { 'value': subject }
         pred = triple['pred']
@@ -142,10 +193,12 @@ def enrich(ont, subject, dbpedia_result):
         # 'http://rdf.freebase.com/ns/' doesn't exist anymore
         if pred['value'] not in ont.blacklist and \
            obj['value'] != 'http://rdf.freebase.com/ns/':
-            added_triples_num += ont.enrich(sub, pred, obj)
+            isEnriched = ont.enrich(sub, pred, obj)
+            added_triples_num += isEnriched
+            expand_summary(ontology_summary, sub['value'], pred['value'], obj['value'], isEnriched)
             if pred['value'] not in added_preds:
                 added_preds.append(pred['value'])
-    return ont, added_triples_num, added_preds
+    return ont, added_triples_num, added_preds, ontology_summary
 
 
 def get_filename(path):
