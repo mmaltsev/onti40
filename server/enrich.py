@@ -52,10 +52,13 @@ def main_upload(ttl_file, params):
     }
     return ont.export(None), enr_stats, enr_logs, ont_stats, subs_data, ontology_summary
 
-def set_prefix(name):
+def set_prefix(name, namespaces):
+    for namespace in namespaces:
+        if name.find(namespace) > -1:
+            name = name.replace(namespace, namespaces[namespace] + ':')
     return name
 
-def expand_summary(ontology_summary, subject, predicate, object, isEnriched):
+def expand_summary(ontology_summary, subject, predicate, object, isEnriched, namespaces):
     if subject not in ontology_summary:
         ontology_summary[subject] = {
             'predicates': {
@@ -63,41 +66,41 @@ def expand_summary(ontology_summary, subject, predicate, object, isEnriched):
                     'objects': {
                         object: {
                             'added': isEnriched,
-                            'label': set_prefix(predicate)
+                            'label': set_prefix(object, namespaces)
                         }
                     },
                     'enriched': isEnriched,
                     'added': isEnriched,
-                    'label': set_prefix(predicate)
+                    'label': set_prefix(predicate, namespaces)
                 }
             },
             'enriched': isEnriched,
             'added': isEnriched,
-            'label': set_prefix(subject)
+            'label': set_prefix(subject, namespaces)
         }
     elif predicate not in ontology_summary[subject]['predicates']:
         ontology_summary[subject]['predicates'][predicate] = {
             'objects': {
                 object: {
                     'added': isEnriched,
-                    'label': set_prefix(predicate)
+                    'label': set_prefix(object, namespaces)
                 }
             },
             'enriched': isEnriched,
             'added': isEnriched,
-            'label': set_prefix(predicate)
+            'label': set_prefix(predicate, namespaces)
         }
         ontology_summary[subject]['enriched'] = ontology_summary[subject]['enriched'] or isEnriched
     elif object not in ontology_summary[subject]['predicates'][predicate]['objects']:
         ontology_summary[subject]['predicates'][predicate]['objects'][object] = {
             'added': isEnriched,
-            'label': set_prefix(predicate)
+            'label': set_prefix(object, namespaces)
         }
         ontology_summary[subject]['enriched'] = ontology_summary[subject]['enriched'] or isEnriched
         ontology_summary[subject]['predicates'][predicate]['enriched'] = \
           ontology_summary[subject]['predicates'][predicate]['enriched'] or isEnriched
-    if subject == 'https://w3id.org/i40/sto#IEC_42010':
-        print(ontology_summary['https://w3id.org/i40/sto#IEC_42010']['added'], isEnriched)
+    #print(object, ontology_summary[subject]['predicates'][predicate]['objects'][object]['added'])
+    return ontology_summary
 
 def ontology_stats(ont):
     stats_query = """
@@ -120,16 +123,22 @@ def ontology_stats(ont):
         }
     """
     ontology_summary = {}
+    namespaces = ont.namespaces()
     for row in ont.query(subs_data_query):
         subject = str(row[0])
         predicate = str(row[1])
-        object = str(row[2])
-        expand_summary(ontology_summary, subject, predicate, object, False)
+        object = row[2]
+        if type(row[2]).__name__ in ['Literal', 'BNode']:
+            obj_value = type(row[2]).__name__
+        else:
+            obj_value = str(row[2])
+        ontology_summary = expand_summary(ontology_summary, subject, predicate, obj_value, False, namespaces)
         if subject in subs_data:
             if predicate not in subs_data[subject]:
                 subs_data[subject].append(predicate)
         else:
             subs_data[subject] = [predicate]
+    #print(ontology_summary['https://w3id.org/i40/sto#BBF_TR-069']['predicates'])
     return ont_stats, subs_data, ontology_summary
 
 
@@ -181,8 +190,9 @@ def enrich(ont, subject, dbpedia_result, ontology_summary):
     added_triples_num = 0
     added_preds = []
     enriched_ontology_summary = {}
+    namespaces = ont.namespaces()
     for triple in dbpedia_result:
-        sub = { 'value': subject }
+        sub = { 'value': str(subject) }
         pred = triple['pred']
         obj = triple['obj']
         # marking primary topic of dbpedia resource as wikipedia article in STO terms
@@ -195,9 +205,18 @@ def enrich(ont, subject, dbpedia_result, ontology_summary):
            obj['value'] != 'http://rdf.freebase.com/ns/':
             isEnriched = ont.enrich(sub, pred, obj)
             added_triples_num += isEnriched
-            expand_summary(ontology_summary, sub['value'], pred['value'], obj['value'], isEnriched)
+            if obj['type'] == 'literal':
+                obj_value = 'Literal'
+            elif obj['type'] == 'bnode':
+                obj_value = 'BNode'
+            else:
+                obj_value = obj['value']
+            #print(ontology_summary)
+            ontology_summary = expand_summary(ontology_summary, sub['value'], \
+              pred['value'], obj_value, isEnriched, namespaces)
             if pred['value'] not in added_preds:
                 added_preds.append(pred['value'])
+    #print(ontology_summary['https://w3id.org/i40/sto#BBF_TR-069']['predicates'])
     return ont, added_triples_num, added_preds, ontology_summary
 
 

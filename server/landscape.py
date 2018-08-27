@@ -68,6 +68,12 @@ class Ontology(object):
         """
         self.graph.add((sub, pred, obj))
 
+    def namespaces(self):
+        namespaces = {}
+        for prefix, namespace in self.graph.namespace_manager.namespaces():
+            namespaces[namespace] = prefix
+        return namespaces
+
 
     def remove(self, sub=None, pred=None, obj=None):
         """Removes triple from ontology.

@@ -17,7 +17,7 @@ if (ttlDataURI && params) {
     enr_stats = data['enr_stats']
     ont_stats = data['ont_stats']
     ontology_summary = data['ontology_summary']
-    console.log(ontology_summary)
+    sessionStorage.setItem('ontology_summary', JSON.stringify(ontology_summary))
     document.getElementById('enr-stats').innerHTML = 
       '<p>enriched <span class="enr-num">' + enr_stats['subj_num'] + '</span>' +
       ' subjects <p>with <span class="enr-num">' + enr_stats['trip_num'] + '</span> triples'
