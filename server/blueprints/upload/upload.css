@@ -47,9 +47,12 @@ p {
   cursor: pointer;
 }
 
-.link-select { margin: 10px 15px 5px 15px; }
+#link-select { margin: 10px 15px 5px 15px; }
 
-.text-input { padding: 5px; }
+.text-input {
+  padding: 5px;
+  width: 120px;
+}
 
 .button {
   display: inline-block;
