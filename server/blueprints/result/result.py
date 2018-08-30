@@ -28,7 +28,17 @@ def enrich():
     params_file = request.files['params']
     prom = params_file.read()
     params = json.loads(prom.decode('utf8'))
-    enr_ttl, enr_stats, enr_logs, ont_stats, subs_data, ontology_summary = main_upload(ttl_file, params)
+    config = {
+        "input_file": ttl_file,
+        "predicate": predicate,
+    }
+    start = time.time()
+    ont, enr_stats, ont_stats, subs_data, ontology_summary = main(options, ont_query)
+    end = time.time()
+    enr_logs = {
+        "enr_time": math.ceil(end - start)
+    }
+    enr_ttl, ont_stats, ont_summary = main('options.json', config)
     #print(ontology_summary)
     result_dict = {
         "enr_ttl": enr_ttl.decode('utf8'),

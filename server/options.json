@@ -6,6 +6,7 @@
         "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
         "<http://xmlns.com/foaf/0.1/isPrimaryTopicOf>"
     ],
+    "predicate": "https://w3id.org/i40/sto#hasDBpediaResource",
     "blacklist": [
         "http://dbpedia.org/ontology/thumbnail",
         "http://dbpedia.org/ontology/wikiPageID",
