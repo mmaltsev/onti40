@@ -11,13 +11,10 @@ if (ttlDataURI && params) {
   formData.append('params', paramsBlob)
   setSpinner(true)
   postRequest('/result/enrich', formData, (data) => {
-    setSpinner(false)
-    enriched_ttl = data['enr_ttl']
-    sessionStorage.setItem('enriched_ttl', enriched_ttl)
     enr_stats = data['enr_stats']
     ont_stats = data['ont_stats']
+    enriched_ttl = data['enr_ttl']
     ontology_summary = data['ontology_summary']
-    sessionStorage.setItem('ontology_summary', JSON.stringify(ontology_summary))
     document.getElementById('enr-stats').innerHTML = 
       '<p>enriched <span class="enr-num">' + enr_stats['subj_num'] + '</span>' +
       ' subjects <p>with <span class="enr-num">' + enr_stats['trip_num'] + '</span> triples'
@@ -29,9 +26,18 @@ if (ttlDataURI && params) {
       '<p><span class="enr-num">' + ont_stats['subj_num'] + '</span> subjects' +
       '<p><span class="enr-num">' + ont_stats['pred_num'] + '</span> predicates' +
       '<p><span class="enr-num">' + ont_stats['obj_num'] + '</span> objects'
+    sessionStorage.setItem('ontology_summary', JSON.stringify(ontology_summary))
+    sessionStorage.setItem('enriched_ttl', enriched_ttl)
     sessionStorage.setItem('subs_data', JSON.stringify(data['subs_data']))
-    sessionStorage.setItem('updated', JSON.stringify(data['enr_stats']['updated']))
+    sessionStorage.setItem('updated', JSON.stringify(enr_stats['updated']))
+    setSpinner(false)
+  },
+  (err) => {
+    alert('Enrichment has failed, try again.')
+    window.location.replace('/upload')
   })
+} else {
+  window.location.replace('/')
 }
 
 function download(content, fileName, contentType) {
