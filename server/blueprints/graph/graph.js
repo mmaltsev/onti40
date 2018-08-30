@@ -42,10 +42,25 @@ function setSigma() {
   });
 
   s.bind('clickNode', function(e) {
-    console.log('clickNode')
     var nodeId = e.data.node.id,
         toKeep = s.graph.neighbors(nodeId);
     toKeep[nodeId] = e.data.node;
+    //////
+    legendContent = e.data.node.label
+    legendContent += '<ul>'
+    connectionsNum = Object.keys(toKeep).length - 1
+    nodeColor = e.data.node.originalColor
+    status = 'untouched'
+    if (nodeColor === 'red') {
+      status = 'enriched'
+    } else if (nodeColor === 'lightblue') {
+      status = 'added'
+    }
+    legendContent += '<li>status: ' + status + '</li>'
+    legendContent += '<li>connections: ' + connectionsNum + '</li>'
+    legendContent += '</ul>'
+    document.getElementById('legend-content').innerHTML = legendContent
+    ///////
     s.graph.nodes().forEach(function(n) {
       if (toKeep[n.id])
         n.color = n.originalColor;
@@ -62,7 +77,7 @@ function setSigma() {
   });
 
   s.bind('clickStage', function(e) {
-    console.log('clickStage')
+    document.getElementById('legend-content').innerHTML = '<span style="color: gray;">click on the node to get its statistics</span>'
     s.graph.nodes().forEach(function(n) {
       n.color = n.originalColor;
     });
@@ -75,7 +90,6 @@ function setSigma() {
 
 function getSigmaData() {
   let ontology_summary = JSON.parse(sessionStorage.getItem('ontology_summary'))
-  console.log(ontology_summary)
   let sigmaData = {
     nodes: [],
     edges: []
@@ -156,7 +170,6 @@ function getSigmaData() {
       }
     }
   }
-  console.log(sigmaData)
   return sigmaData
 }
 

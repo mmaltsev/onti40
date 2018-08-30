@@ -5,6 +5,16 @@
   <div id="graph-container"></div>
   <!--div id="cy"></div-->
   <img src="assets/spinner.gif" id="spinner" class="spinner" />
+  <div class="legend">
+    <span class="legend-title">Legend:</span>
+    <p><div class="circle red"></div> - Enriched entities
+    <p><div class="circle blue"></div> - Added entities
+    <p><div class="circle black"></div> - Unchanged entities
+    <p><div class="line green"></div> - Enriched predicates
+    <p><div class="line gray"></div> - Untouched predicates
+    <p><span class="legend-title">Statistics:</span>
+    <div id="legend-content"><span style="color: gray;">click on the node to get its statistics</span></div>
+  </div>
 </div>
 
 <script src="libs/sigma.min.js"></script>

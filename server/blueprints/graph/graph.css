@@ -5,3 +5,55 @@
     right: 0;
     position: absolute;
 }
+
+.legend {
+    position: absolute;
+    background: #f8f8f8;
+    border: 1px solid lightgray;
+    top: 70px;
+    right: 0;
+    min-width: 200px;
+    padding: 5px;
+    line-height: 1.5;
+    min-height: 60px;
+    font-size: 12px;
+}
+
+.legend-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.line {
+    width: 10px;
+    height: 1px;
+    display: inline-block;
+}
+
+.red {
+    background: red;
+    border: 1px solid red;
+}
+.blue {
+    background: lightblue;
+    border: 1px solid lightblue;
+}
+.black {
+    background: #555;
+    border: 1px solid #555;
+}
+.green {
+    background: lightgreen;
+    border: 1px solid lightgreen;
+}
+.gray {
+    background: lightgray;
+    border: 1px solid lightgray;
+}
