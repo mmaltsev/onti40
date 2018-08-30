@@ -12,7 +12,11 @@ if (ontologyDataURI !== '') {
   } else {
     getRequest(
       '/validation/template', 
-      (shapes) => getShacl(ontologyData, shapes)
+      (shapes) => getShacl(ontologyData, shapes),
+      (err) => {
+        alert('SHACL template is not specified')
+        window.location.replace('/result')
+      }
     )
   }
 }

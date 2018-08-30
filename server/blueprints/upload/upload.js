@@ -105,8 +105,12 @@ function launchEnrichment() {
     return
   }
   sessionStorage.setItem('params_file', JSON.stringify(params))
-  let redirectUrl = '/result?params=' + JSON.stringify(params)
-  window.open(redirectUrl)
+  // let URLparams = new URLSearchParams();
+  // for(let key in params){
+  //   URLparams.set(key, params[key]) 
+  // }
+  // let redirectUrl = '/result?' + URLparams.toString()
+  window.open('/result')
 }
 
 function setSpinner(isSpinner) {
