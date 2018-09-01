@@ -2,9 +2,9 @@
 // let prefixes = extractPrefixes()
 spinner(isActive = true)
 
-// let subsData = JSON.parse(sessionStorage.getItem('subs_data'))
-// let updated = JSON.parse(sessionStorage.getItem('updated'))
-let ontologySummary = JSON.parse(sessionStorage.getItem('ontology_summary'))
+// let subsData = JSON.parse(localStorage.getItem('subs_data'))
+// let updated = JSON.parse(localStorage.getItem('updated'))
+let ontologySummary = JSON.parse(localStorage.getItem('ontology_summary'))
 for (let sub in ontologySummary) {
   if (ontologySummary.hasOwnProperty(sub)) {
     let option = document.createElement('option')
@@ -18,7 +18,7 @@ optionChange()
 
 function dataFetch() {
   let params = {
-    ontology_summary: sessionStorage.getItem('ontology_summary')
+    ontology_summary: localStorage.getItem('ontology_summary')
   }
   postRequest('/wheel/data', params, (data) => {
 

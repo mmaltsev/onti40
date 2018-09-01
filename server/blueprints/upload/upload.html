@@ -15,13 +15,13 @@
     <div class="enrichment-properties">
       <div class="checkbox-block">
         <div class="enrichment-properties-head">Enrichment Properties</div>
-        <div id="link-select">Link with <select style="padding: 5px;"><option>DBpedia</option><option>Wikipedia</option></select> via <input title="name of the predicate" type="text" class="text-input" /></div>
+        <div id="link-select">Link with <select style="padding: 5px;"><option>DBpedia</option><option>Wikipedia</option></select> via <input title="URI of the predicate" value="https://w3id.org/i40/sto#hasDBpediaResource" type="text" class="text-input" /></div>
         <div class="checkbox"><label><input type="checkbox" name="feature" value="ovstats" checked />Overall statistics</label></div>
         <div class="checkbox"><label><input type="checkbox" name="feature" value="enstats" checked />Enrichment statistics</label></div>
-        <div class="checkbox"><label><input type="checkbox" name="feature" value="ont" checked />Enriched Ontology in Turtle</label></div>
+        <div class="checkbox"><label><input type="checkbox" name="feature" value="enont" checked />Enriched Ontology in Turtle</label></div>
         <div class="checkbox"><label><input type="checkbox" name="feature" value="shacl" checked />SHACL report</label></div>
         <div class="checkbox"><label><input type="checkbox" name="feature" value="wheel" checked />Wheel visualization</label></div>
-        <div class="checkbox"><label><input type="checkbox" name="feature" value="tree" checked />Graph visualization</label></div>
+        <div class="checkbox"><label><input type="checkbox" name="feature" value="graph" checked />Graph visualization</label></div>
         <div class="checkbox"><label><input type="checkbox" name="feature" value="logs" checked />Logs</label></div>
       </div>
       <div class="button" onclick="launchEnrichment()">Launch Enrichment Process</div>

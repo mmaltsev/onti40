@@ -99,7 +99,7 @@ function setSigma() {
 }
 
 function getSigmaData() {
-  let ontology_summary = JSON.parse(sessionStorage.getItem('ontology_summary'))
+  let ontology_summary = JSON.parse(localStorage.getItem('ontology_summary'))
   let sigmaData = {
     nodes: [],
     edges: []

@@ -1,10 +1,10 @@
 setSpinner(true)
-let ontologyDataURI = sessionStorage.getItem('ttl_file') || ''
+let ontologyDataURI = localStorage.getItem('ttl_file') || ''
 if (ontologyDataURI !== '') {
   // cut the "data:;base64," and  "==" parts from the URI
   let ontologyBaseData = ontologyDataURI.substring(13, ontologyDataURI.length - 2)
   let ontologyData = atob(ontologyBaseData)
-  let templateDataURI = sessionStorage.getItem('shacl_template') || ''
+  let templateDataURI = localStorage.getItem('shacl_template') || ''
   if (templateDataURI !== '') {
     let templateBaseData = templateDataURI.substring(13, templateDataURI.length - 2)
     let templateData = atob(templateBaseData)
@@ -155,8 +155,8 @@ function uploadFile(file) {
     fileReader = new FileReader()
     fileReader.onload = function (evt) {
       let file_data = evt.target.result
-      sessionStorage.setItem('ttl_file', file_data)
-      sessionStorage.setItem('ttl_file_name', fileName)
+      localStorage.setItem('ttl_file', file_data)
+      localStorage.setItem('ttl_file_name', fileName)
     }
     fileReader.readAsDataURL(file)
 

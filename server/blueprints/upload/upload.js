@@ -45,8 +45,8 @@ function uploadFile(file) {
     fileReader = new FileReader()
     fileReader.onload = function (evt) {
       let file_data = evt.target.result
-      sessionStorage.setItem('ttl_file', file_data)
-      sessionStorage.setItem('ttl_file_name', fileName)
+      localStorage.setItem('ttl_file', file_data)
+      localStorage.setItem('ttl_file_name', fileName)
     }
     fileReader.readAsDataURL(file)
 
@@ -94,8 +94,6 @@ function launchEnrichment() {
   }
   params['kg'] = document.getElementById('link-select').getElementsByTagName('select')[0].value
   params['pred'] = document.getElementById('link-select').getElementsByTagName('input')[0].value
-  // DELETE
-  params['pred'] = 'sto:hasDBpediaResource'
   if (params['kg'] === '') {
     document.getElementById('link-select').getElementsByTagName('select')[0].style.borderColor = 'red'
     return
@@ -104,12 +102,7 @@ function launchEnrichment() {
     document.getElementById('link-select').getElementsByTagName('input')[0].style.borderColor = 'red'
     return
   }
-  sessionStorage.setItem('params_file', JSON.stringify(params))
-  // let URLparams = new URLSearchParams();
-  // for(let key in params){
-  //   URLparams.set(key, params[key]) 
-  // }
-  // let redirectUrl = '/result?' + URLparams.toString()
+  localStorage.setItem('params_file', JSON.stringify(params))
   window.open('/result')
 }
 
