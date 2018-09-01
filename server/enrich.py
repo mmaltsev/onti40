@@ -30,15 +30,22 @@ def set_prefixes(ont, prefixes):
     """Set ontology prefixes. Here all custom prefixes are specified."""
     for prefix in prefixes:
         ont.set_prefix(prefix['prfx'], prefix['uri'])
+    # printing empty line, needed for pretty outlining of the logs
     print()
     return ont
 
 
-def get_dbp_query(predicate, whitelist):
+def get_dbp_query(predicate, whitelist, config):
     """Return a DBpedia query based on the predicate resource and whitelist."""
-    resource = get_resource(predicate)
-    dbpedia_query = 'SELECT ?pred ?obj WHERE {' + \
-        '<http://dbpedia.org/resource/' + resource + '> ?pred ?obj . '
+    dbpedia_query = 'SELECT ?pred ?obj WHERE {'
+    if config.get('link_type') == 'Wikipedia':
+        # in DBpedia all resource are linked to the http version of wikipeida URL
+        predicate = predicate.replace('https', 'http')
+        dbpedia_query += '?sub <http://xmlns.com/foaf/0.1/isPrimaryTopicOf> <' + predicate +  '> .'
+        dbpedia_query += '?sub ?pred ?obj .'
+    else:
+        resource = get_resource(predicate)
+        dbpedia_query += '<http://dbpedia.org/resource/' + resource + '> ?pred ?obj . '
     if whitelist:
         dbpedia_query += 'FILTER(?pred IN (' + whitelist + '))'
     dbpedia_query += '}'
@@ -49,7 +56,7 @@ def get_ont_query(predicate):
     """Return an ontology query based on the linking predicate."""
     ont_query = """
         SELECT ?sub ?res WHERE {
-            ?sub """ + predicate + """ ?res .
+            ?sub <""" + predicate + """> ?res .
         }
     """
     return ont_query
@@ -199,16 +206,23 @@ def main(options_path, config):
     ont = Ontology(config.get('input_file') or options['input_file'])
     ont = set_blacklist(ont, options['blacklist'])
     ont_stats, ont_summary, ont_whitelist, ont_query = get_init_ont_data(ont, options, config)
+    enr_warns_num = 0
     for row in ont.query(ont_query):
         subject = row[0]
         predicate = row[1]
-        dbpedia_query = get_dbp_query(predicate, ont_whitelist)
-        dbpedia_result = DBpedia().query(dbpedia_query)
+        dbpedia_query = get_dbp_query(predicate, ont_whitelist, config)
+        try:
+            dbpedia_result = DBpedia().query(dbpedia_query)
+        except Exception:
+            print()
+            print('!!!failed to enrich with the following query: ' + dbpedia_query)
+            enr_warns_num += 1
+        #print(dbpedia_result)
         ont = enrich(ont, subject, dbpedia_result, ont_summary)
     ont = set_prefixes(ont, options['prefixes'])
     print('...finishing enrichment process')
     export_path = get_export_path(config)
-    return ont.export(export_path), ont_stats, ont_summary
+    return ont.export(export_path), ont_stats, ont_summary, enr_warns_num
 
 
 if __name__ == "__main__":
