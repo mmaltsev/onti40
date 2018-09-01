@@ -2,9 +2,18 @@
 import os
 from flask import Blueprint, render_template, url_for, jsonify, request
 from server.helper import log_cmd
-from server.enrich import main_upload
+from server.enrich import main
 from werkzeug.utils import secure_filename
 import json
+import time
+import math
+
+def get_enrichment_stats(ontology_summary):
+    enrichment_stats = {
+        "subj_num": 0,
+        "trip_num": 0
+    }
+    return enrichment_stats
 
 result_handler = Blueprint(name='result',
                             import_name=__name__,
@@ -30,23 +39,19 @@ def enrich():
     params = json.loads(prom.decode('utf8'))
     config = {
         "input_file": ttl_file,
-        "predicate": predicate,
+        "predicate": params['pred'],
     }
+    #ont, enr_stats, ont_stats, subs_data, ontology_summary = main(options, ont_query)
     start = time.time()
-    ont, enr_stats, ont_stats, subs_data, ontology_summary = main(options, ont_query)
+    enriched_ontology, ontology_stats, ontology_summary = main('options.json', config)
     end = time.time()
-    enr_logs = {
-        "enr_time": math.ceil(end - start)
-    }
-    enr_ttl, ont_stats, ont_summary = main('options.json', config)
-    #print(ontology_summary)
+    enrichment_stats = get_enrichment_stats(ontology_summary)
     result_dict = {
-        "enr_ttl": enr_ttl.decode('utf8'),
-        "enr_logs": enr_logs,
-        "ont_stats": ont_stats,
-        "enr_stats": enr_stats,
-        "subs_data": subs_data,
+        "enriched_ontology": enriched_ontology.decode('utf8'),
+        "enrichment_time": math.ceil(end - start),
+        "ontology_stats": ontology_stats,
         "ontology_summary": ontology_summary,
+        "enrichment_stats": enrichment_stats,
     }
     #print(result_dict['ontology_summary']['https://w3id.org/i40/sto#IEC_42010']['added'])
     return jsonify(result_dict)

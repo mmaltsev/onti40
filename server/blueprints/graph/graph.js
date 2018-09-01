@@ -36,9 +36,11 @@ function setSigma() {
 
   s.graph.nodes().forEach(function(n) {
     n.originalColor = n.color;
+    n.originalLabel = n.label
   });
   s.graph.edges().forEach(function(e) {
     e.originalColor = e.color;
+    e.originalLabel = e.label
   });
 
   s.bind('clickNode', function(e) {
@@ -62,16 +64,22 @@ function setSigma() {
     document.getElementById('legend-content').innerHTML = legendContent
     ///////
     s.graph.nodes().forEach(function(n) {
-      if (toKeep[n.id])
+      if (toKeep[n.id]) {
         n.color = n.originalColor;
-      else
-        n.color = '#f8f8f8';
+        n.label = n.originalLabel;
+      } else {
+        n.color = '#fafafa';
+        n.label = ''
+      }
     });
     s.graph.edges().forEach(function(e) {
-      if (toKeep[e.source] && toKeep[e.target])
+      if (toKeep[e.source] && toKeep[e.target]) {
         e.color = e.originalColor;
-      else
-        e.color = '#f8f8f8';
+        e.label = e.originalLabel
+      } else {
+        e.color = '#fafafa';
+        e.label = ''
+      }
     });
     s.refresh();
   });
@@ -80,9 +88,11 @@ function setSigma() {
     document.getElementById('legend-content').innerHTML = '<span style="color: gray;">click on the node to get its statistics</span>'
     s.graph.nodes().forEach(function(n) {
       n.color = n.originalColor;
+      n.label = n.originalLabel
     });
     s.graph.edges().forEach(function(e) {
       e.color = e.originalColor;
+      e.label = e.originalLabel
     });
     s.refresh();
   });

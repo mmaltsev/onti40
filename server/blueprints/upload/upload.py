@@ -2,7 +2,6 @@
 import os
 from flask import Blueprint, render_template, url_for, jsonify, request
 from server.helper import log_cmd
-from server.enrich import main_upload
 from werkzeug.utils import secure_filename
 import time
 import json

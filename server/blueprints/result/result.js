@@ -11,28 +11,31 @@ if (ttlDataURI && params) {
   formData.append('params', paramsBlob)
   setSpinner(true)
   postRequest('/result/enrich', formData, (data) => {
-    enr_stats = data['enr_stats']
-    ont_stats = data['ont_stats']
-    enriched_ttl = data['enr_ttl']
+    console.log(data)
+    ontology_stats = data['ontology_stats']
+    enrichedOntology = data['enriched_ontology']
     ontology_summary = data['ontology_summary']
+    enrichment_time = data['enrichment_time']
+    enrichment_stats = data['enrichment_stats']
     document.getElementById('enr-stats').innerHTML = 
-      '<p>enriched <span class="enr-num">' + enr_stats['subj_num'] + '</span>' +
-      ' subjects <p>with <span class="enr-num">' + enr_stats['trip_num'] + '</span> triples'
+      '<p>enriched <span class="enr-num">' + enrichment_stats['subj_num'] + '</span>' +
+      ' subject(s) <p>with <span class="enr-num">' + enrichment_stats['trip_num'] + '</span> triple(s)'
     document.getElementById('enr-logs').innerHTML = 
-      'enriched within <span class="enr-num">' + enr_stats['subj_num'] + 's</span>' +
-      '<p><span class="enr-num">0</span> errors<p><span class="enr-num">0</span> warnings'
+      'enriched within <span class="enr-num">' + enrichment_time + 's</span>' +
+      '<p><span class="enr-num">0</span> error(s)<p><span class="enr-num">0</span> warning(s)'
     document.getElementById('ont-stats').innerHTML = 
-      '<span class="enr-num">' + ont_stats['trip_num'] + '</span> triples' +
-      '<p><span class="enr-num">' + ont_stats['subj_num'] + '</span> subjects' +
-      '<p><span class="enr-num">' + ont_stats['pred_num'] + '</span> predicates' +
-      '<p><span class="enr-num">' + ont_stats['obj_num'] + '</span> objects'
+      '<span class="enr-num">' + ontology_stats['trip_num'] + '</span> triple(s)' +
+      '<p><span class="enr-num">' + ontology_stats['subj_num'] + '</span> subject(s)' +
+      '<p><span class="enr-num">' + ontology_stats['pred_num'] + '</span> predicate(s)' +
+      '<p><span class="enr-num">' + ontology_stats['obj_num'] + '</span> object(s)'
     sessionStorage.setItem('ontology_summary', JSON.stringify(ontology_summary))
-    sessionStorage.setItem('enriched_ttl', enriched_ttl)
-    sessionStorage.setItem('subs_data', JSON.stringify(data['subs_data']))
-    sessionStorage.setItem('updated', JSON.stringify(enr_stats['updated']))
+    sessionStorage.setItem('enriched_ontology', enrichedOntology)
+    //sessionStorage.setItem('subs_data', JSON.stringify(data['subs_data']))
+    //sessionStorage.setItem('updated', JSON.stringify(enr_stats['updated']))
     setSpinner(false)
   },
   (err) => {
+    console.error(err)
     alert('Enrichment has failed, try again.')
     window.location.replace('/upload')
   })

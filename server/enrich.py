@@ -3,8 +3,6 @@
 from server.landscape import Ontology, DBpedia
 import json
 import sys
-import time
-import math
 
 
 def get_filename(path):
@@ -32,6 +30,7 @@ def set_prefixes(ont, prefixes):
     """Set ontology prefixes. Here all custom prefixes are specified."""
     for prefix in prefixes:
         ont.set_prefix(prefix['prfx'], prefix['uri'])
+    print()
     return ont
 
 
@@ -56,9 +55,8 @@ def get_ont_query(predicate):
     return ont_query
 
 
-def set_prefix(name):
+def set_prefix(name, namespaces):
     """Return an ontology entity with prefix."""
-    namespaces = ont.namespaces()
     for namespace in namespaces:
         if name.find(namespace) > -1:
             name = name.replace(namespace, namespaces[namespace] + ':')
@@ -151,7 +149,8 @@ def get_init_ont_summary(ont):
         subj = str(row[0])
         pred = str(row[1])
         obj = get_obj_value(row[2], type(row[2]).__name__)
-        ont_summary = expand_summary(ont_summary, subj, pred, obj, False)
+        namespaces = ont.namespaces()
+        ont_summary = expand_summary(ont_summary, subj, pred, obj, False, namespaces)
     return ont_summary
 
 
@@ -167,7 +166,8 @@ def enrich(ont, subject, dbpedia_result, ont_summary):
         if pred['value'] not in ont.blacklist:
             isEnriched = ont.enrich(subj, pred, obj)
             obj_value = get_obj_value(obj['value'], obj['type'])
-            ont_summary = expand_summary(ont_summary, subj['value'], pred['value'], obj_value, isEnriched)
+            namespaces = ont.namespaces()
+            ont_summary = expand_summary(ont_summary, subj['value'], pred['value'], obj_value, isEnriched, namespaces)
     return ont
 
 
@@ -180,19 +180,21 @@ def get_init_ont_data(ont, options, config):
     return ont_stats, ont_summary, ont_whitelist, ont_query
 
 
-def get_export_path(options):
+def get_export_path(config):
     """Return ontology related data before enrichment."""
-    if options['input_file']:
-        filename = get_filename(options['input_file'])
-        full_filename = 'ttl/' + filename + '(enriched).ttl'
-        print('...saving file as "' + full_filename + '"')
-        return full_filename
-    else:
+    if config != {}:
         return None
+    filename = get_filename(options['input_file'])
+    full_filename = 'ttl/' + filename + '(enriched).ttl'
+    print('...saving file as "' + full_filename + '"')
+    return full_filename
 
 
 def main(options_path, config):
     """Describe abstract algorithm of the ontology enriching."""
+    print('...starting enrichment process')
+    if config != {}:
+        options_path = 'server/' + options_path
     options = json.load(open(options_path))
     ont = Ontology(config.get('input_file') or options['input_file'])
     ont = set_blacklist(ont, options['blacklist'])
@@ -202,10 +204,11 @@ def main(options_path, config):
         predicate = row[1]
         dbpedia_query = get_dbp_query(predicate, ont_whitelist)
         dbpedia_result = DBpedia().query(dbpedia_query)
-        ont = enrich(ont, subject, dbpedia_result)
+        ont = enrich(ont, subject, dbpedia_result, ont_summary)
     ont = set_prefixes(ont, options['prefixes'])
-    export_path = get_export_path(options)
-    return ont(export_path), ont_stats, ont_summary
+    print('...finishing enrichment process')
+    export_path = get_export_path(config)
+    return ont.export(export_path), ont_stats, ont_summary
 
 
 if __name__ == "__main__":
