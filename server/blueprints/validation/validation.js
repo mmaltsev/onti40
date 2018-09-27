@@ -2,7 +2,7 @@ setSpinner(true)
 let ontologyDataURI = localStorage.getItem('ttl_file') || ''
 if (ontologyDataURI !== '') {
   // cut the "data:;base64," and  "==" parts from the URI
-  let ontologyBaseData = ontologyDataURI.substring(13, ontologyDataURI.length - 2)
+  let ontologyBaseData = ontologyDataURI.substring(24, ontologyDataURI.length - 2)
   let ontologyData = atob(ontologyBaseData)
   let templateDataURI = localStorage.getItem('shacl_template') || ''
   if (templateDataURI !== '') {
