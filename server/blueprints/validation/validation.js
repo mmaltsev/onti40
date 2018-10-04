@@ -2,11 +2,11 @@ setSpinner(true)
 let ontologyDataURI = localStorage.getItem('ttl_file') || ''
 if (ontologyDataURI !== '') {
   // cut the "data:;base64," and  "==" parts from the URI
-  let ontologyBaseData = ontologyDataURI.substring(24, ontologyDataURI.length - 2)
+  let ontologyBaseData = ontologyDataURI.substring(24, ontologyDataURI.length - 1)
   let ontologyData = atob(ontologyBaseData)
   let templateDataURI = localStorage.getItem('shacl_template') || ''
   if (templateDataURI !== '') {
-    let templateBaseData = templateDataURI.substring(13, templateDataURI.length - 2)
+    let templateBaseData = templateDataURI.substring(24, templateDataURI.length - 1)
     let templateData = atob(templateBaseData)
     getShacl(ontologyData, templateData)
   } else {
@@ -45,8 +45,8 @@ function getShacl(data, shapes) {
     //console.log(report.results()[3].message())
     if (!report.conforms()) {
       generateReport(report)
-      setSpinner(false)
     }
+    setSpinner(false)
   })
 }
 
@@ -78,6 +78,7 @@ function shorten(str, type) {
 }
 
 function depictTable(reportObj) {
+  console.log('reportObj:', reportObj)
   let resultTableHTML = '<tr><th>Subject</th><th>Property</th><th>Error</th></tr>'
   for (let subject in reportObj) {
     if (reportObj.hasOwnProperty(subject)) {
